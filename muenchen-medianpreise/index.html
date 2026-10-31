@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>München: Median-Kaufpreise kleiner Wohnungen</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--border:#262a33;--text:#e7e9ee;--muted:#8b93a3;--accent:#4f8cff;--good:#22c55e;--bad:#ef4444;
+--c1:#4f8cff;--c2:#f5b942;--c3:#22d3ee;--c4:#a78bfa;--c5:#f472b6}
+body.light{--bg:#f6f7f9;--card:#fff;--border:#e3e6eb;--text:#14171c;--muted:#5f6878}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:20px 28px;border-bottom:1px solid var(--border)}
+h1{font-size:20px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:4px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+select,input,button{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font:inherit;font-size:13px}
+button{cursor:pointer}main{padding:24px 28px;max-width:1400px;margin:0 auto}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+.kpi .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.kpi .value{font-size:26px;font-weight:600;margin-top:6px}.kpi .delta{font-size:12px;margin-top:4px}
+.up{color:var(--good)}.down{color:var(--bad)}
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:14px;margin-bottom:18px}
+@media(max-width:520px){.charts{grid-template-columns:1fr}main,header{padding:16px}}
+.card h3{margin:0 0 12px;font-size:14px;font-weight:600}.chartbox{position:relative;height:280px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left}
+th{color:var(--muted);font-weight:500;cursor:pointer;user-select:none}td.num,th.num{text-align:right}
+.tablewrap{overflow-x:auto}footer{color:var(--muted);font-size:12px;padding:8px 28px 28px;max-width:1400px;margin:0 auto}
+footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <div><h1 id="title"></h1><div class="sub" id="subtitle"></div></div>
+  <div class="controls" id="controls"></div>
+</header>
+<main>
+  <section class="kpis" id="kpis"></section>
+  <section class="charts" id="charts"></section>
+  <section class="card" id="tablecard"><h3 id="tabletitle"></h3>
+    <div class="controls" style="margin-bottom:10px"><input id="search" placeholder="Suchen…"></div>
+    <div class="tablewrap"><table id="table"></table></div></section>
+</main>
+<footer id="footer"></footer>
+<script>
+/* ===== CONFIG: only this block changes per dashboard ===== */
+const CONFIG = {"title": "München: Median-Kaufpreise kleiner Wohnungen", "subtitle": "Täglicher Median €/m² der vom Immo Bot erfassten Angebote (28.10.–30.10.2026), ohne Bieterverfahren unter 150.000 €", "updated": "30.10.2026", "kpis": [{"label": "Median Alle 25–45 m²", "format": "eur", "value": 8866, "delta": 0.0, "deltaLabel": "seit 28.10."}, {"label": "Median 30–45 m²", "format": "eur", "value": 8500, "delta": -0.1, "deltaLabel": "seit 28.10."}, {"label": "Median Westpark 28–35 m²", "format": "eur", "value": 9035, "delta": 1.1, "deltaLabel": "seit 28.10."}, {"label": "Angebote 25–45 m²", "value": 110}], "charts": [{"title": "Median €/m² je Tag", "type": "line", "format": "eur", "data": {"labels": ["28.10.", "29.10.", "30.10."], "datasets": [{"label": "Alle 25–45 m²", "data": [8866, 8866, 8866]}, {"label": "30–45 m²", "data": [8512, 8500, 8500]}, {"label": "Westpark 28–35 m²", "data": [8933, 8933, 9035]}]}}, {"title": "Median, Durchschnitt und flächengewichtet (heute)", "type": "bar", "format": "eur", "data": {"labels": ["Alle 25–45 m²", "30–45 m²", "Westpark 28–35 m²"], "datasets": [{"label": "Median", "data": [8866, 8500, 9035]}, {"label": "Durchschnitt", "data": [8977, 8535, 8725]}, {"label": "Flächengewichtet", "data": [8878, 8483, 8710]}]}}], "table": {"title": "Tageswerte", "columns": ["Datum", "Gruppe", "Angebote", "Median €/m²", "Ø €/m²", "Gewichtet €/m²"], "formats": ["text", "text", "num", "eur", "eur", "eur"], "rows": [["30.10.", "Alle 25–45 m²", 110, 8866, 8977, 8878], ["30.10.", "30–45 m²", 73, 8500, 8535, 8483], ["30.10.", "Westpark 28–35 m²", 11, 9035, 8725, 8710], ["29.10.", "Alle 25–45 m²", 108, 8866, 8959, 8859], ["29.10.", "30–45 m²", 73, 8500, 8507, 8457], ["29.10.", "Westpark 28–35 m²", 11, 8933, 8537, 8521], ["28.10.", "Alle 25–45 m²", 108, 8866, 8954, 8854], ["28.10.", "30–45 m²", 74, 8512, 8505, 8456], ["28.10.", "Westpark 28–35 m²", 11, 8933, 8537, 8521]]}};
+/* ========================================================== */
+/* Colors are fixed in JS (CSS variable reads failed on iOS Safari and drew black charts) */
+const PALETTE=['#4f8cff','#f5b942','#22d3ee','#a78bfa','#f472b6'];
+const THEME={dark:{muted:'#8b93a3',border:'#262a33',card:'#171a21'},light:{muted:'#5f6878',border:'#e3e6eb',card:'#ffffff'}};
+const th=()=>THEME[document.body.classList.contains('light')?'light':'dark'];
+const hexA=(h,a)=>{const n=parseInt(h.slice(1),16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`};
+const fmt=(v,f)=>typeof v!=='number'?v:f==='eur'?v.toLocaleString('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}):f==='pct'?v.toLocaleString('de-DE',{maximumFractionDigits:1})+' %':v.toLocaleString('de-DE');
+let filter=CONFIG.filter?CONFIG.filter.options[0]:null, charts=[], sortCol=null, sortAsc=true;
+document.title=CONFIG.title;title.textContent=CONFIG.title;subtitle.textContent=CONFIG.subtitle||'';
+footer.innerHTML=[...(CONFIG.sources||[]).map(s=>`<a href="${s.url}" target="_blank">${s.label}</a>`),...(CONFIG.updated?[`Stand: ${CONFIG.updated}`]:[])].join(' · ');
+if(CONFIG.filter){const s=document.createElement('select');CONFIG.filter.options.forEach(o=>s.add(new Option(o,o)));s.onchange=()=>{filter=s.value;render()};controls.append(CONFIG.filter.label+' ',s)}
+const tb=document.createElement('button');tb.textContent='Hell/Dunkel';tb.onclick=()=>{document.body.classList.toggle('light');render()};controls.append(tb);
+const pick=x=>x&&typeof x==='object'&&!Array.isArray(x)&&filter in x?x[filter]:x;
+function render(){
+  kpis.innerHTML=(CONFIG.kpis||[]).map(k=>{const v=pick(k.value),d=pick(k.delta);return `<div class="card kpi"><div class="label">${k.label}</div><div class="value">${fmt(v,k.format)}</div>${d!=null?`<div class="delta ${d>=0?'up':'down'}">${d>=0?'▲':'▼'} ${fmt(Math.abs(d),'pct')} ${k.deltaLabel||''}</div>`:''}</div>`}).join('');
+  charts.forEach(c=>c.destroy());charts=[];document.getElementById('charts').innerHTML='';
+  Chart.defaults.color=th().muted;Chart.defaults.borderColor=th().border;
+  (CONFIG.charts||[]).forEach(c=>{const card=document.createElement('div');card.className='card';card.innerHTML=`<h3>${c.title}</h3><div class="chartbox"><canvas></canvas></div>`;document.getElementById('charts').append(card);
+    const p=PALETTE,data=pick(c.data);
+    charts.push(new Chart(card.querySelector('canvas'),{type:c.type,data:{labels:data.labels,datasets:data.datasets.map((d,i)=>({...d,borderColor:c.type==='doughnut'?th().card:p[i%5],backgroundColor:c.type==='doughnut'?p:c.type==='line'?hexA(p[i%5],.15):p[i%5],pointBackgroundColor:p[i%5],pointRadius:c.type==='line'?(data.labels.length<=12?4:0):undefined,fill:c.type==='line'&&data.datasets.length===1,tension:.3,borderWidth:2}))},
+      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:data.datasets.length>1||c.type==='doughnut',position:'bottom'}},scales:c.type==='doughnut'?{}:{y:{beginAtZero:!!c.beginAtZero,ticks:{callback:v=>fmt(v,c.format)}}}}}))});
+  renderTable();
+}
+function renderTable(){const t=CONFIG.table;if(!t){tablecard.style.display='none';return}tabletitle.textContent=t.title;
+  let rows=pick(t.rows).slice();const q=search.value.toLowerCase();if(q)rows=rows.filter(r=>r.join(' ').toLowerCase().includes(q));
+  if(sortCol!=null)rows.sort((a,b)=>(a[sortCol]>b[sortCol]?1:-1)*(sortAsc?1:-1));
+  table.innerHTML='<thead><tr>'+t.columns.map((c,i)=>`<th class="${t.formats?.[i]&&t.formats[i]!=='text'?'num':''}" data-i="${i}">${c}${sortCol===i?(sortAsc?' ▲':' ▼'):''}</th>`).join('')+'</tr></thead><tbody>'+
+    rows.map(r=>'<tr>'+r.map((v,i)=>`<td class="${typeof v==='number'?'num':''}">${fmt(v,t.formats?.[i])}</td>`).join('')+'</tr>').join('')+'</tbody>';
+  table.querySelectorAll('th').forEach(th=>th.onclick=()=>{const i=+th.dataset.i;sortAsc=sortCol===i?!sortAsc:true;sortCol=i;renderTable()})}
+search.oninput=renderTable;render();
+</script>
+</body>
+</html>

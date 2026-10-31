@@ -46,8 +46,11 @@ footer a{color:var(--accent)}
 /* ===== CONFIG: only this block changes per dashboard ===== */
 const CONFIG = {"title": "Beispiel: Wohnungsmarkt-Vergleich (Beispieldaten)", "subtitle": "Platzhalterzahlen zum Testen des Templates, keine echten Marktdaten", "updated": "31.10.2026", "filter": {"label": "Stadt", "options": ["München", "Berlin"]}, "kpis": [{"label": "Ø Kaufpreis / m²", "format": "eur", "value": {"München": 9000, "Berlin": 5500}, "delta": {"München": 1.5, "Berlin": -0.8}, "deltaLabel": "ggü. Vorjahr"}, {"label": "Ø Miete / m²", "format": "eur", "value": {"München": 22, "Berlin": 15}}, {"label": "Bruttorendite", "format": "pct", "value": {"München": 2.9, "Berlin": 3.3}}], "charts": [{"title": "Preis je m² (Index)", "type": "line", "data": {"München": {"labels": ["2021", "2022", "2023", "2024", "2025", "2026"], "datasets": [{"label": "München", "data": [100, 106, 99, 97, 99, 101]}]}, "Berlin": {"labels": ["2021", "2022", "2023", "2024", "2025", "2026"], "datasets": [{"label": "Berlin", "data": [100, 104, 96, 95, 97, 96]}]}}}, {"title": "Angebote nach Größe", "type": "doughnut", "data": {"labels": ["<50 m²", "50–80 m²", ">80 m²"], "datasets": [{"label": "Anteil", "data": [30, 45, 25]}]}}], "table": {"title": "Stadtteile", "columns": ["Stadtteil", "€/m²", "Miete €/m²"], "formats": ["text", "eur", "eur"], "rows": {"München": [["Sendling", 8800, 21], ["Schwabing", 10500, 24], ["Pasing", 8200, 19]], "Berlin": [["Mitte", 7000, 18], ["Neukölln", 5000, 14], ["Spandau", 4200, 12]]}}};
 /* ========================================================== */
-const css=n=>getComputedStyle(document.body).getPropertyValue(n).trim();
-const palette=()=>['--c1','--c2','--c3','--c4','--c5'].map(css);
+/* Colors are fixed in JS (CSS variable reads failed on iOS Safari and drew black charts) */
+const PALETTE=['#4f8cff','#f5b942','#22d3ee','#a78bfa','#f472b6'];
+const THEME={dark:{muted:'#8b93a3',border:'#262a33',card:'#171a21'},light:{muted:'#5f6878',border:'#e3e6eb',card:'#ffffff'}};
+const th=()=>THEME[document.body.classList.contains('light')?'light':'dark'];
+const hexA=(h,a)=>{const n=parseInt(h.slice(1),16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`};
 const fmt=(v,f)=>typeof v!=='number'?v:f==='eur'?v.toLocaleString('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}):f==='pct'?v.toLocaleString('de-DE',{maximumFractionDigits:1})+' %':v.toLocaleString('de-DE');
 let filter=CONFIG.filter?CONFIG.filter.options[0]:null, charts=[], sortCol=null, sortAsc=true;
 document.title=CONFIG.title;title.textContent=CONFIG.title;subtitle.textContent=CONFIG.subtitle||'';
@@ -58,10 +61,10 @@ const pick=x=>x&&typeof x==='object'&&!Array.isArray(x)&&filter in x?x[filter]:x
 function render(){
   kpis.innerHTML=(CONFIG.kpis||[]).map(k=>{const v=pick(k.value),d=pick(k.delta);return `<div class="card kpi"><div class="label">${k.label}</div><div class="value">${fmt(v,k.format)}</div>${d!=null?`<div class="delta ${d>=0?'up':'down'}">${d>=0?'▲':'▼'} ${fmt(Math.abs(d),'pct')} ${k.deltaLabel||''}</div>`:''}</div>`}).join('');
   charts.forEach(c=>c.destroy());charts=[];document.getElementById('charts').innerHTML='';
-  Chart.defaults.color=css('--muted');Chart.defaults.borderColor=css('--border');
+  Chart.defaults.color=th().muted;Chart.defaults.borderColor=th().border;
   (CONFIG.charts||[]).forEach(c=>{const card=document.createElement('div');card.className='card';card.innerHTML=`<h3>${c.title}</h3><div class="chartbox"><canvas></canvas></div>`;document.getElementById('charts').append(card);
-    const p=palette(),data=pick(c.data);
-    charts.push(new Chart(card.querySelector('canvas'),{type:c.type,data:{labels:data.labels,datasets:data.datasets.map((d,i)=>({...d,borderColor:c.type==='doughnut'?css('--card'):p[i%5],backgroundColor:c.type==='doughnut'?p:c.type==='line'?p[i%5]+'22':p[i%5],fill:c.type==='line'&&data.datasets.length===1,tension:.3,pointRadius:c.type==='line'?0:undefined,borderWidth:2}))},
+    const p=PALETTE,data=pick(c.data);
+    charts.push(new Chart(card.querySelector('canvas'),{type:c.type,data:{labels:data.labels,datasets:data.datasets.map((d,i)=>({...d,borderColor:c.type==='doughnut'?th().card:p[i%5],backgroundColor:c.type==='doughnut'?p:c.type==='line'?hexA(p[i%5],.15):p[i%5],pointBackgroundColor:p[i%5],pointRadius:c.type==='line'?(data.labels.length<=12?4:0):undefined,fill:c.type==='line'&&data.datasets.length===1,tension:.3,borderWidth:2}))},
       options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:data.datasets.length>1||c.type==='doughnut',position:'bottom'}},scales:c.type==='doughnut'?{}:{y:{beginAtZero:!!c.beginAtZero,ticks:{callback:v=>fmt(v,c.format)}}}}}))});
   renderTable();
 }
