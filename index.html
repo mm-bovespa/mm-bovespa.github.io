@@ -1,0 +1,6 @@
+<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboards</title>
+<style>body{margin:0;font-family:Inter,system-ui,sans-serif;background:#0f1115;color:#e7e9ee}main{max-width:900px;margin:0 auto;padding:32px 20px}h1{font-size:22px}
+a.card{display:block;background:#171a21;border:1px solid #262a33;border-radius:12px;padding:16px;margin:10px 0;color:#e7e9ee;text-decoration:none}a.card:hover{border-color:#4f8cff}.d{color:#8b93a3;font-size:13px;margin-top:4px}</style></head>
+<body><main><h1>Dashboards</h1><div id="list"></div></main>
+<script>fetch('dashboards.json').then(r=>r.json()).then(l=>{list.innerHTML=l.sort((a,b)=>b.date.localeCompare(a.date)).map(d=>`<a class="card" href="${d.slug}/"><div>${d.title}</div><div class="d">${d.date}</div></a>`).join('')})</script>
+</body></html>

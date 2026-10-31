@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beispiel: Wohnungsmarkt-Vergleich (Beispieldaten)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--border:#262a33;--text:#e7e9ee;--muted:#8b93a3;--accent:#4f8cff;--good:#22c55e;--bad:#ef4444;
+--c1:#4f8cff;--c2:#f5b942;--c3:#22d3ee;--c4:#a78bfa;--c5:#f472b6}
+body.light{--bg:#f6f7f9;--card:#fff;--border:#e3e6eb;--text:#14171c;--muted:#5f6878}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:20px 28px;border-bottom:1px solid var(--border)}
+h1{font-size:20px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:4px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+select,input,button{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font:inherit;font-size:13px}
+button{cursor:pointer}main{padding:24px 28px;max-width:1400px;margin:0 auto}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+.kpi .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.kpi .value{font-size:26px;font-weight:600;margin-top:6px}.kpi .delta{font-size:12px;margin-top:4px}
+.up{color:var(--good)}.down{color:var(--bad)}
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:14px;margin-bottom:18px}
+@media(max-width:520px){.charts{grid-template-columns:1fr}main,header{padding:16px}}
+.card h3{margin:0 0 12px;font-size:14px;font-weight:600}.chartbox{position:relative;height:280px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left}
+th{color:var(--muted);font-weight:500;cursor:pointer;user-select:none}td.num,th.num{text-align:right}
+.tablewrap{overflow-x:auto}footer{color:var(--muted);font-size:12px;padding:8px 28px 28px;max-width:1400px;margin:0 auto}
+footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <div><h1 id="title"></h1><div class="sub" id="subtitle"></div></div>
+  <div class="controls" id="controls"></div>
+</header>
+<main>
+  <section class="kpis" id="kpis"></section>
+  <section class="charts" id="charts"></section>
+  <section class="card" id="tablecard"><h3 id="tabletitle"></h3>
+    <div class="controls" style="margin-bottom:10px"><input id="search" placeholder="Suchen…"></div>
+    <div class="tablewrap"><table id="table"></table></div></section>
+</main>
+<footer id="footer"></footer>
+<script>
+/* ===== CONFIG: only this block changes per dashboard ===== */
+const CONFIG = {"title": "Beispiel: Wohnungsmarkt-Vergleich (Beispieldaten)", "subtitle": "Platzhalterzahlen zum Testen des Templates, keine echten Marktdaten", "updated": "31.10.2026", "filter": {"label": "Stadt", "options": ["München", "Berlin"]}, "kpis": [{"label": "Ø Kaufpreis / m²", "format": "eur", "value": {"München": 9000, "Berlin": 5500}, "delta": {"München": 1.5, "Berlin": -0.8}, "deltaLabel": "ggü. Vorjahr"}, {"label": "Ø Miete / m²", "format": "eur", "value": {"München": 22, "Berlin": 15}}, {"label": "Bruttorendite", "format": "pct", "value": {"München": 2.9, "Berlin": 3.3}}], "charts": [{"title": "Preis je m² (Index)", "type": "line", "data": {"München": {"labels": ["2021", "2022", "2023", "2024", "2025", "2026"], "datasets": [{"label": "München", "data": [100, 106, 99, 97, 99, 101]}]}, "Berlin": {"labels": ["2021", "2022", "2023", "2024", "2025", "2026"], "datasets": [{"label": "Berlin", "data": [100, 104, 96, 95, 97, 96]}]}}}, {"title": "Angebote nach Größe", "type": "doughnut", "data": {"labels": ["<50 m²", "50–80 m²", ">80 m²"], "datasets": [{"label": "Anteil", "data": [30, 45, 25]}]}}], "table": {"title": "Stadtteile", "columns": ["Stadtteil", "€/m²", "Miete €/m²"], "formats": ["text", "eur", "eur"], "rows": {"München": [["Sendling", 8800, 21], ["Schwabing", 10500, 24], ["Pasing", 8200, 19]], "Berlin": [["Mitte", 7000, 18], ["Neukölln", 5000, 14], ["Spandau", 4200, 12]]}}};
+/* ========================================================== */
+const css=n=>getComputedStyle(document.body).getPropertyValue(n).trim();
+const palette=()=>['--c1','--c2','--c3','--c4','--c5'].map(css);
+const fmt=(v,f)=>typeof v!=='number'?v:f==='eur'?v.toLocaleString('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}):f==='pct'?v.toLocaleString('de-DE',{maximumFractionDigits:1})+' %':v.toLocaleString('de-DE');
+let filter=CONFIG.filter?CONFIG.filter.options[0]:null, charts=[], sortCol=null, sortAsc=true;
+document.title=CONFIG.title;title.textContent=CONFIG.title;subtitle.textContent=CONFIG.subtitle||'';
+footer.innerHTML=[...(CONFIG.sources||[]).map(s=>`<a href="${s.url}" target="_blank">${s.label}</a>`),...(CONFIG.updated?[`Stand: ${CONFIG.updated}`]:[])].join(' · ');
+if(CONFIG.filter){const s=document.createElement('select');CONFIG.filter.options.forEach(o=>s.add(new Option(o,o)));s.onchange=()=>{filter=s.value;render()};controls.append(CONFIG.filter.label+' ',s)}
+const tb=document.createElement('button');tb.textContent='Hell/Dunkel';tb.onclick=()=>{document.body.classList.toggle('light');render()};controls.append(tb);
+const pick=x=>x&&typeof x==='object'&&!Array.isArray(x)&&filter in x?x[filter]:x;
+function render(){
+  kpis.innerHTML=(CONFIG.kpis||[]).map(k=>{const v=pick(k.value),d=pick(k.delta);return `<div class="card kpi"><div class="label">${k.label}</div><div class="value">${fmt(v,k.format)}</div>${d!=null?`<div class="delta ${d>=0?'up':'down'}">${d>=0?'▲':'▼'} ${fmt(Math.abs(d),'pct')} ${k.deltaLabel||''}</div>`:''}</div>`}).join('');
+  charts.forEach(c=>c.destroy());charts=[];document.getElementById('charts').innerHTML='';
+  Chart.defaults.color=css('--muted');Chart.defaults.borderColor=css('--border');
+  (CONFIG.charts||[]).forEach(c=>{const card=document.createElement('div');card.className='card';card.innerHTML=`<h3>${c.title}</h3><div class="chartbox"><canvas></canvas></div>`;document.getElementById('charts').append(card);
+    const p=palette(),data=pick(c.data);
+    charts.push(new Chart(card.querySelector('canvas'),{type:c.type,data:{labels:data.labels,datasets:data.datasets.map((d,i)=>({...d,borderColor:c.type==='doughnut'?css('--card'):p[i%5],backgroundColor:c.type==='doughnut'?p:c.type==='line'?p[i%5]+'22':p[i%5],fill:c.type==='line'&&data.datasets.length===1,tension:.3,pointRadius:c.type==='line'?0:undefined,borderWidth:2}))},
+      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:data.datasets.length>1||c.type==='doughnut',position:'bottom'}},scales:c.type==='doughnut'?{}:{y:{beginAtZero:!!c.beginAtZero,ticks:{callback:v=>fmt(v,c.format)}}}}}))});
+  renderTable();
+}
+function renderTable(){const t=CONFIG.table;if(!t){tablecard.style.display='none';return}tabletitle.textContent=t.title;
+  let rows=pick(t.rows).slice();const q=search.value.toLowerCase();if(q)rows=rows.filter(r=>r.join(' ').toLowerCase().includes(q));
+  if(sortCol!=null)rows.sort((a,b)=>(a[sortCol]>b[sortCol]?1:-1)*(sortAsc?1:-1));
+  table.innerHTML='<thead><tr>'+t.columns.map((c,i)=>`<th class="${t.formats?.[i]&&t.formats[i]!=='text'?'num':''}" data-i="${i}">${c}${sortCol===i?(sortAsc?' ▲':' ▼'):''}</th>`).join('')+'</tr></thead><tbody>'+
+    rows.map(r=>'<tr>'+r.map((v,i)=>`<td class="${typeof v==='number'?'num':''}">${fmt(v,t.formats?.[i])}</td>`).join('')+'</tr>').join('')+'</tbody>';
+  table.querySelectorAll('th').forEach(th=>th.onclick=()=>{const i=+th.dataset.i;sortAsc=sortCol===i?!sortAsc:true;sortCol=i;renderTable()})}
+search.oninput=renderTable;render();
+</script>
+</body>
+</html>
