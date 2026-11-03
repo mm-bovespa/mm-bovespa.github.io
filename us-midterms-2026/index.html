@@ -15,6 +15,12 @@
   Das Dashboard berechnet daraus automatisch: "Ergebnisse eingetragen: x von N", Treffer/Abweichung je Rennen,
   Prognose-Trefferquote (Lean-Rennen mit Favorit; Toss-ups haben keinen Favoriten und werden separat gezählt)
   sowie Treffer/Abweichung bei Mehrheit und Sitzzahl je Kammer und je Modell.
+  LIVE-AUSZÄHLUNG (Wahlnacht 3./4.11.2026): wird von /workspace/dashboards/update_midterms_live.py befüllt (NYT/AP-JSON, Fallback CNN):
+    * meta.live            : {"status": "wartet"|"läuft", "stand", "stand_hhmm", "abgerufen", "quelle", "url"}
+    * house.live / senate.live : {"D_won","R_won","I_won","leading_D","leading_R","leading_I","called","open","races_total","control","stand","quelle","has_data"}
+                             (Senat: *_won inkl. nicht zur Wahl stehender Sitze)
+    * races[i].live        : {"leader","pctD","pctR","pctI","counted" (% erwartete Stimmen),"votes","called","winner","status": "projiziert"|"offen"|"keine Zahlen"}
+    * Projizierte Sieger füllen races[i].result automatisch (races[i].result_auto=true); Prognosefelder bleiben unverändert.
   Farben sind fest in JS hinterlegt (kein getComputedStyle – iOS-Safari-Fix).
 -->
 <script id="data" type="application/json">
@@ -24,7 +30,16 @@
   "election_date": "2026-11-03",
   "built": "2026-11-03 09:30 MEZ",
   "primary_rater": "Cook Political Report",
-  "note": "Alle Werte sind Prognosen (Ratings/Modelle/Märkte), keine Ergebnisse."
+  "note": "Alle Werte sind Prognosen (Ratings/Modelle/Märkte), keine Ergebnisse.",
+  "live": {
+   "status": "wartet",
+   "stand": "03.11.2026 22:17 MEZ",
+   "stand_hhmm": "22:17",
+   "abgerufen": "03.11.2026 22:17 MEZ",
+   "quelle": "New York Times / AP (static01.nyt.com)",
+   "url": "https://www.nytimes.com/interactive/2026/11/03/us/elections/results-house.html",
+   "hinweis": "Vorläufige Auszählung (AP-Projektionen), keine amtlichen Endergebnisse."
+  }
  },
  "house": {
   "total": 435,
@@ -94,6 +109,21 @@
    "undecided": null,
    "control": null,
    "stand": null
+  },
+  "live": {
+   "D_won": 0,
+   "R_won": 0,
+   "I_won": 0,
+   "leading_D": 0,
+   "leading_R": 0,
+   "leading_I": 0,
+   "called": 0,
+   "open": 435,
+   "races_total": 435,
+   "control": null,
+   "stand": "03.11.2026 22:17 MEZ",
+   "quelle": "New York Times / AP (static01.nyt.com)",
+   "has_data": false
   }
  },
  "senate": {
@@ -175,6 +205,21 @@
    "undecided": null,
    "control": null,
    "stand": null
+  },
+  "live": {
+   "D_won": 34,
+   "R_won": 31,
+   "I_won": 0,
+   "leading_D": 0,
+   "leading_R": 0,
+   "leading_I": 0,
+   "called": 0,
+   "open": 35,
+   "races_total": 35,
+   "control": null,
+   "stand": "03.11.2026 22:17 MEZ",
+   "quelle": "New York Times / AP (static01.nyt.com)",
+   "has_data": false
   }
  },
  "models": [
@@ -300,7 +345,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/481756",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-AZ-06",
@@ -315,7 +371,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/481781",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-CA-48",
@@ -330,7 +397,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/482056",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-CO-08",
@@ -345,7 +423,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/482481",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-FL-25",
@@ -360,7 +449,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/482636",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-IA-01",
@@ -375,7 +475,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483086",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-IA-03",
@@ -390,7 +501,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483096",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-NC-11",
@@ -405,7 +527,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483756",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-NJ-07",
@@ -420,7 +553,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483531",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-NM-02",
@@ -435,7 +579,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483566",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-OH-09",
@@ -450,7 +605,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483821",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-PA-07",
@@ -465,7 +631,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483941",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-PA-08",
@@ -480,7 +657,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483946",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-PA-10",
@@ -495,7 +683,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483956",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-TX-34",
@@ -510,7 +709,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/485386",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-VA-02",
@@ -525,7 +735,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/485441",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-WA-03",
@@ -540,7 +761,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/485501",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-WI-03",
@@ -555,7 +787,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/485561",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-CA-22",
@@ -570,7 +813,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/481926",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-CO-05",
@@ -585,7 +839,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/482466",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-FL-14",
@@ -600,7 +865,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/482581",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-FL-22",
@@ -615,7 +891,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/482621",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-IA-02",
@@ -630,7 +917,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483091",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-KY-06",
@@ -645,7 +943,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483151",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-MI-04",
@@ -660,7 +969,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483296",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-MI-07",
@@ -675,7 +995,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483311",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-MI-10",
@@ -690,7 +1021,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483326",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-MT-01",
@@ -705,7 +1047,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483446",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-NC-01",
@@ -720,7 +1073,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483706",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-NY-17",
@@ -735,7 +1099,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483656",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-OH-07",
@@ -750,7 +1125,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483811",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-PA-01",
@@ -765,7 +1151,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483911",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-SC-01",
@@ -780,7 +1177,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/485136",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-TX-35",
@@ -795,7 +1203,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/485391",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-TX-15",
@@ -810,7 +1229,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/485291",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-VA-01",
@@ -825,7 +1255,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/485436",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-AK-AL",
@@ -840,7 +1281,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/481751",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-AL-02",
@@ -855,7 +1307,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/481721",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-AZ-02",
@@ -870,7 +1333,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/481761",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-CO-04",
@@ -885,7 +1359,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/482461",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-FL-07",
@@ -900,7 +1385,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/482546",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-FL-09",
@@ -915,7 +1411,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/482556",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-FL-13",
@@ -930,7 +1437,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/482576",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-FL-27",
@@ -945,7 +1463,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/482646",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-IN-05",
@@ -960,7 +1489,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483061",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-ME-02",
@@ -975,7 +1515,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483191",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-MN-01",
@@ -990,7 +1541,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483346",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-NV-02",
@@ -1005,7 +1567,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483476",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-NY-21",
@@ -1020,7 +1593,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483676",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-OH-10",
@@ -1035,7 +1619,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483826",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-OH-15",
@@ -1050,7 +1645,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/483851",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-TX-23",
@@ -1065,7 +1671,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/485331",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-VA-05",
@@ -1080,7 +1697,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/485456",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "H-WI-01",
@@ -1095,7 +1723,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/house/race/485551",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "S-MI",
@@ -1111,7 +1750,18 @@
    "rating2_source": "Inside Elections",
    "rating3": "Lean D",
    "url": "https://www.cookpolitical.com/senate/race/488606",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "S-MN",
@@ -1127,7 +1777,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/senate/race/488611",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "S-NH",
@@ -1143,7 +1804,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/senate/race/488636",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "S-AK",
@@ -1159,7 +1831,18 @@
    "rating2_source": "Inside Elections",
    "rating3": "Lean D",
    "url": "https://www.cookpolitical.com/senate/race/488531",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "S-IA",
@@ -1175,7 +1858,18 @@
    "rating2_source": "Inside Elections",
    "rating3": "Lean R",
    "url": "https://www.cookpolitical.com/senate/race/488566",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "S-KS",
@@ -1191,7 +1885,18 @@
    "rating2_source": "Inside Elections",
    "rating3": "Lean D",
    "url": "https://www.cookpolitical.com/senate/race/488581",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "S-ME",
@@ -1207,7 +1912,18 @@
    "rating2_source": "Inside Elections",
    "rating3": "Lean D",
    "url": "https://www.cookpolitical.com/senate/race/488601",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "S-OH",
@@ -1223,7 +1939,18 @@
    "rating2_source": "Inside Elections",
    "rating3": "Lean D",
    "url": "https://www.cookpolitical.com/senate/race/488651",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "S-TX",
@@ -1239,7 +1966,18 @@
    "rating2_source": "Inside Elections",
    "rating3": "Lean D",
    "url": "https://www.cookpolitical.com/senate/race/488686",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "S-NE",
@@ -1255,7 +1993,18 @@
    "rating2_source": "Inside Elections",
    "rating3": null,
    "url": "https://www.cookpolitical.com/senate/race/488631",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   },
   {
    "id": "S-SC",
@@ -1271,7 +2020,18 @@
    "rating2_source": "Inside Elections",
    "rating3": "Lean R",
    "url": "https://www.cookpolitical.com/senate/race/488671",
-   "result": null
+   "result": null,
+   "live": {
+    "leader": null,
+    "pctD": null,
+    "pctR": null,
+    "pctI": null,
+    "counted": 0,
+    "votes": 0,
+    "called": false,
+    "winner": null,
+    "status": "keine Zahlen"
+   }
   }
  ],
  "sources": [
@@ -1384,6 +2144,20 @@ th{color:var(--muted);font-weight:500;cursor:pointer;user-select:none;white-spac
 .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;color:#0f1115}
 .counter{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:13px;margin:4px 0 12px}
 .counter b{font-size:15px}
+.tag.live{background:rgba(239,68,68,.16);color:#f87171}.tag.live:before{content:"● "}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cmp .col{border:1px solid var(--border);border-radius:10px;padding:12px}
+.cmp .col.lv{border-color:rgba(239,68,68,.45)}.cmp .label{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+.cmp .big{font-size:26px;font-weight:650;margin:6px 0 2px}.cmp .big small{font-size:12px;font-weight:500;color:var(--muted)}
+.cmp .wait{font-size:15px;font-weight:600;margin:10px 0 4px;color:var(--t)}
+.livebar{position:relative;display:flex;height:22px;border-radius:6px;overflow:hidden;margin:14px 0 4px;background:#4b5563}
+.livebar span{display:block;height:100%}.livebar .mk{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--text)}
+.cmp .src{font-size:12px;color:var(--muted);line-height:1.5;margin-top:4px}
+.lvsrc{font-size:11.5px;color:var(--muted);margin-top:8px}
+tr.livediff td{background:rgba(245,158,11,.09)}tr.livediff td:first-child{box-shadow:inset 3px 0 0 #f59e0b}
+.diffb{display:inline-block;font-size:10.5px;font-weight:700;color:#f59e0b;margin-left:4px;white-space:nowrap}
+.cnt{display:inline-block;width:46px;height:5px;border-radius:3px;background:var(--border);vertical-align:middle;margin-left:4px;overflow:hidden}.cnt i{display:block;height:100%;background:var(--accent)}
+th.lvh{color:#f87171}
+@media(max-width:520px){.cmp{grid-template-columns:1fr}.cmp .big{font-size:22px}}
 footer{color:var(--muted);font-size:12px;padding:8px 28px 32px;max-width:1400px;margin:0 auto;line-height:1.55}
 footer a,td a{color:var(--accent)}footer ul{padding-left:18px;margin:6px 0}
 @media(max-width:520px){main,header,footer{padding-left:14px;padding-right:14px}.kpi .value{font-size:22px}h1{font-size:18px}.seatbox{height:170px}th,td{padding:7px 6px;font-size:12px}}
@@ -1396,7 +2170,10 @@ footer a,td a{color:var(--accent)}footer ul{padding-left:18px;margin:6px 0}
   <div class="controls"><button id="themebtn">Hell/Dunkel</button></div>
 </header>
 <main>
-  <div class="banner"><b>Hinweis:</b> Alle Zahlen auf dieser Seite sind <b>Prognosen</b> (Ratings, Modelle, Prognosemärkte) – <b>keine Ergebnisse</b>. Wahltag ist Di, 3. Nov. 2026. Die Spalten/Felder „Ergebnis“ werden nach Auszählung im JSON-Block nachgetragen. <span id="rescount"></span></div>
+  <div class="banner"><b>Hinweis:</b> Alle Zahlen auf dieser Seite – außer den rot markierten Live-Werten – sind <b>Prognosen</b> (Ratings, Modelle, Prognosemärkte) – <b>keine Ergebnisse</b>. Wahltag ist Di, 3. Nov. 2026. Die Spalten/Felder „Ergebnis“ werden nach Auszählung im JSON-Block nachgetragen. <span id="rescount"></span><br><b>Live-Auszählung:</b> In der Wahlnacht werden zusätzlich vorläufige Zählstände und AP-Projektionen angezeigt (rot markiert <span class="tag live">Live</span>). Die Prognosen bleiben unverändert stehen – zum Vergleich.</div>
+
+  <h2>Prognose vs. Live-Stand <span class="tag">Prognose</span> <span class="tag live">Live</span></h2>
+  <section class="grid2" id="live-cards"></section>
 
   <h2>1 · Repräsentantenhaus <span class="tag">Prognose</span></h2>
   <section class="kpis" id="kpis-house"></section>
@@ -1410,17 +2187,18 @@ footer a,td a{color:var(--accent)}footer ul{padding-left:18px;margin:6px 0}
   <div class="card"><div class="tablewrap"><table id="models"></table></div>
   <div class="sub" style="margin-top:8px">Wahrscheinlichkeit = Chance der <b>Demokraten</b> auf die Mehrheit. Prognosemärkte (Polymarket, Kalshi) sind keine Modelle, sondern Handelspreise – nur ergänzend.</div></div>
 
-  <h2>3 · Alle Lean D / Toss-up / Lean R-Rennen <span class="tag">Prognose</span> <span class="tag res">Ergebnis</span></h2>
+  <h2>3 · Alle Lean D / Toss-up / Lean R-Rennen <span class="tag">Prognose</span> <span class="tag live">Live</span> <span class="tag res">Ergebnis</span></h2>
   <div class="card">
     <div class="counter" id="counter"></div>
     <div class="controls" style="margin-bottom:10px">
       <select id="f-chamber"><option value="">Beide Kammern</option><option>Repräsentantenhaus</option><option>Senat</option></select>
       <select id="f-rating"><option value="">Alle Ratings</option><option>Lean D</option><option>Toss-up</option><option>Lean R</option></select>
       <select id="f-held"><option value="">Alle Amtsinhaber</option><option value="D">Sitz gehalten von D</option><option value="R">Sitz gehalten von R</option></select>
+      <select id="f-live"><option value="">Live: alle</option><option value="diff">Live weicht von Prognose ab</option><option value="projiziert">Live: projiziert</option><option value="offen">Live: offen (mit Zahlen)</option></select>
       <input id="search" placeholder="Suchen (z. B. PA, Lawler, OPEN)…" style="min-width:220px">
     </div>
     <div class="tablewrap"><table id="races"></table></div>
-    <div class="sub" style="margin-top:8px">Primär-Rating: Cook Political Report (2. Nov. 2026). Zweit-Rating: Inside Elections (29. Okt. 2026; inkl. „Tilt“-Stufe). Sabato nur für Senatsrennen, die im finalen Artikel genannt sind. Treffer/Abweichung: Lean D → Treffer bei D-Sieg, Lean R → Treffer bei R-Sieg; Toss-ups haben keinen Favoriten (zeigt Halten/Wechsel).</div>
+    <div class="sub" style="margin-top:8px">Primär-Rating: Cook Political Report (2. Nov. 2026). Zweit-Rating: Inside Elections (29. Okt. 2026; inkl. „Tilt“-Stufe). Sabato nur für Senatsrennen, die im finalen Artikel genannt sind. Treffer/Abweichung: Lean D → Treffer bei D-Sieg, Lean R → Treffer bei R-Sieg; Toss-ups haben keinen Favoriten (zeigt Halten/Wechsel). <b>Live-Spalten</b> (rot): Führend = Partei mit den meisten bisher gezählten Stimmen; Anteil D/R in % der gezählten Stimmen (I = Unabhängige, z. B. Osborn in NE); ausgezählt = geschätzter Anteil der erwarteten Stimmen; projiziert = AP-Projektion. Orange markiert: Live-Führender ≠ Prognose-Favorit (Cook). Projizierte Sieger werden automatisch als Ergebnis übernommen.</div>
   </div>
 </main>
 <footer id="footer"></footer>
@@ -1435,7 +2213,7 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const pill=k=>k?`<span class="pill" style="background:${COL[k]||'#9ca3af'}">${esc(k)}</span>`:'<span class="pend">—</span>';
 const pc=v=>v==null?'—':v.toLocaleString('de-DE',{maximumFractionDigits:1})+' %';
 const party=p=>p?`<b class="${p==='D'?'d':p==='R'?'r':''}">${p}</b>`:'—';
-subtitle.textContent=`Wahltag 3. Nov. 2026 · Primärquelle: ${DATA.meta.primary_rater} · Dashboard erstellt ${DATA.meta.built}`;
+subtitle.textContent=`Wahltag 3. Nov. 2026 · Primärquelle: ${DATA.meta.primary_rater} · Dashboard erstellt ${DATA.meta.built}`+(DATA.meta.live?` · Live-Stand: ${DATA.meta.live.stand}`:'');
 
 /* --- Bewertung Rennen --- */
 function favOf(r){return r==='Lean D'||r==='Likely D'||r==='Solid D'||r==='Tilt D'?'D':r==='Lean R'||r==='Likely R'||r==='Solid R'||r==='Tilt R'?'R':null}
@@ -1456,6 +2234,30 @@ function chamberKPIs(key){const c=DATA[key],f=c.forecast,res=c.result||{},hasRes
     {l:'Mehrheits-Chance D (Modelle)',v:`<span class="d">${Math.min(...models.map(m=>m[key+'_d_prob']))}–${Math.max(...models.map(m=>m[key+'_d_prob']))} %</span>`,s:models.map(m=>`${m.source.split(' (')[0]} ${pc(m[key+'_d_prob'])}`).join(' · '),r:hasRes&&res.control?`Ergebnis: ${party(res.control)}`:'Ergebnis: <span class="pend">— ausstehend</span>'}];
   document.getElementById('kpis-'+key).innerHTML=kp.map(k=>`<div class="card kpi"><div class="label">${k.l}</div><div class="value">${k.v}</div><div class="src">${k.s}</div>${k.r?`<div class="res">${k.r}</div>`:''}</div>`).join('');
 }
+
+/* --- Live-Auszählung --- */
+const LIVE=DATA.meta.live||null;
+function liveCards(){const box=document.getElementById('live-cards');
+  box.innerHTML=['house','senate'].map(key=>{const c=DATA[key],f=c.forecast,L=c.live,has=L&&L.has_data;
+    const models=DATA.models.filter(m=>m[key+'_d_prob']!=null&&m.kind==='Modell').map(m=>m[key+'_d_prob']);
+    const name=key==='house'?'Repräsentantenhaus':'Senat';
+    const prog=`<div class="col"><div class="label">Prognose (Cook, unverändert)</div><div class="big"><span class="d">D ${f.D}</span> : <span class="r">R ${f.R}</span> <small>· ${f.tossup} Toss-ups</small></div>
+      <div class="src">${esc(f.basis)} · Modelle: Chance D ${Math.min(...models)}–${Math.max(...models)} %</div></div>`;
+    let live;
+    if(!has){live=`<div class="col lv"><div class="label">Live-Stand${LIVE?` · Stand: ${esc(LIVE.stand_hhmm)} MEZ`:''}</div><div class="wait">Auszählung beginnt ab 01:00 MEZ</div>
+      <div class="src">Noch keine Stimmen gezählt${key==='senate'?` · ${c.not_up.D} D / ${c.not_up.R} R nicht zur Wahl`:''}. Erste Wahllokale schließen am 4.11. ab 00:00 MEZ (Teile von IN/KY), die meisten ab 01:00 MEZ, die letzten (Alaska) um 07:00 MEZ.</div></div>`}
+    else{const ctl=L.control?`Mehrheit: ${party(L.control)} <span class="ok">gesichert</span>`:'Mehrheit: noch offen';
+      live=`<div class="col lv"><div class="label">Live-Stand · Stand: ${esc(LIVE.stand_hhmm)} MEZ</div><div class="big"><span class="d">D ${L.D_won}</span> : <span class="r">R ${L.R_won}</span>${L.I_won?` <small>· I ${L.I_won}</small>`:''} <small>projiziert</small></div>
+      <div class="src">${key==='senate'?'inkl. nicht zur Wahl stehender Sitze · ':''}führend (nicht projiziert): <b class="d">D ${L.leading_D}</b> · <b class="r">R ${L.leading_R}</b>${L.leading_I?` · I ${L.leading_I}`:''} · offen ${L.open} von ${L.races_total} Rennen<br>${ctl} · D+führend ${L.D_won+L.leading_D} / R+führend ${L.R_won+L.leading_R}</div></div>`}
+    const T=c.total,w=v=>(v/T*100).toFixed(2)+'%';
+    const segs=has?[[L.D_won,'#3b82f6','D projiziert'],[L.leading_D,'#93b7fb','D führend'],[L.I_won+L.leading_I,'#a3a3a3','I'],[T-L.D_won-L.R_won-L.I_won-L.leading_D-L.leading_R-L.leading_I,'#4b5563','offen/ohne Zahlen'],[L.leading_R,'#f8a5a5','R führend'],[L.R_won,'#ef4444','R projiziert']]:[[T,'#4b5563','offen']];
+    const bar=`<div class="livebar" title="Linie = Mehrheit ${c.majority}">${segs.filter(s=>s[0]>0).map(s=>`<span style="width:${w(s[0])};background:${s[1]}" title="${s[2]}: ${s[0]}"></span>`).join('')}<div class="mk" style="left:${w(c.majority)}"></div></div>
+      <div class="legend">${has?segs.filter(s=>s[0]>0).map(s=>`<span><i style="background:${s[1]}"></i>${s[2]} ${s[0]}</span>`).join(''):''}<span>Linie = Mehrheit ${c.majority}</span></div>`;
+    return `<div class="card"><h3>${name} · ${c.total} Sitze · Mehrheit ${c.majority}</h3><div class="cmp">${prog}${live}</div>${bar}
+      <div class="lvsrc">${LIVE?`Live-Quelle: <a href="${esc(LIVE.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(LIVE.quelle)}</a> · Stand: ${esc(LIVE.stand)} · abgerufen ${esc(LIVE.abgerufen)} · ${esc(LIVE.hinweis||'')}`:'Live-Quelle: New York Times / AP – noch nicht abgerufen.'}</div></div>`}).join('');
+}
+const liveLead=r=>{const l=r.live;return l?(l.called?l.winner:l.leader):null};
+const liveDiff=r=>{const f=favOf(r.rating),l=liveLead(r);return !!(f&&l&&l!==f)};
 
 /* --- Sitzbalken --- */
 const markerPlugin={id:'marker',afterDatasetsDraw(ch,a,o){const {ctx,chartArea:ca,scales:{x}}=ch;const xv=x.getPixelForValue(o.value);ctx.save();ctx.strokeStyle=th().marker;ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(xv,ca.top-12);ctx.lineTo(xv,ca.bottom+2);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=th().text;ctx.font='600 12px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText(o.label,xv,ca.top-14);ctx.restore()}};
@@ -1490,7 +2292,7 @@ function modelsTable(){const rc={house:DATA.house.result?.control,senate:DATA.se
 
 /* --- Rennentabelle --- */
 const RORD={'Lean D':1,'Toss-up':2,'Lean R':3};
-const COLS=[{k:'label',l:'Rennen'},{k:'rating',l:'Prognose (Cook)'},{k:'result',l:'Ergebnis'},{k:'verdict',l:'Treffer/Abw.'},{k:'rating2',l:'Inside Elections'},{k:'rating3',l:'Sabato'},{k:'incumbent',l:'Amtsinhaber'},{k:'held_by',l:'Sitz hält'},{k:'chamber',l:'Kammer'}];
+const COLS=[{k:'label',l:'Rennen'},{k:'rating',l:'Prognose (Cook)'},{k:'lv_lead',l:'Live: Führend',lv:1},{k:'lv_share',l:'Anteil D / R',lv:1},{k:'lv_cnt',l:'ausgezählt',lv:1},{k:'lv_stat',l:'Status',lv:1},{k:'result',l:'Ergebnis'},{k:'verdict',l:'Treffer/Abw.'},{k:'rating2',l:'Inside Elections'},{k:'rating3',l:'Sabato'},{k:'incumbent',l:'Amtsinhaber'},{k:'held_by',l:'Sitz hält'},{k:'chamber',l:'Kammer'}];
 let sortK='rating',sortAsc=true;
 function counters(){const R=DATA.races,done=R.filter(r=>r.result);const lean=done.filter(r=>favOf(r.rating));const hits=lean.filter(r=>r.result===favOf(r.rating));
   const ie=done.filter(r=>favOf(r.rating2)),ieh=ie.filter(r=>r.result===favOf(r.rating2));const tu=done.filter(r=>r.rating==='Toss-up');
@@ -1499,31 +2301,42 @@ function counters(){const R=DATA.races,done=R.filter(r=>r.result);const lean=don
   counter.innerHTML=`<span>Ergebnisse eingetragen: <b>${done.length} von ${R.length}</b> Rennen</span><span>Prognose-Trefferquote (Cook): ${quote}</span>`+
    (ie.length?`<span>Inside Elections: <b>${Math.round(ieh.length/ie.length*100)} %</b> (${ieh.length}/${ie.length})</span>`:'')+
    (tu.length?`<span>Toss-ups entschieden: <b class="d">D ${tu.filter(r=>r.result==='D').length}</b> : <b class="r">R ${tu.filter(r=>r.result==='R').length}</b></span>`:'')+
+   (()=>{const lp=R.filter(r=>r.live&&r.live.called).length,lo=R.filter(r=>r.live&&r.live.status==='offen').length,ld=R.filter(liveDiff).length,au=R.filter(r=>r.result_auto).length;
+     return LIVE&&LIVE.status==='läuft'?`<span><span class="tag live">Live</span> Stand ${esc(LIVE.stand_hhmm)} MEZ: <b>${lp}</b> projiziert · <b>${lo}</b> offen mit Zahlen · <b class="miss">${ld}</b> Live-Führende ≠ Prognose${au?` · ${au} Ergebnisse automatisch aus AP-Projektion`:''}</span>`:`<span><span class="tag live">Live</span> <span class="pend">Auszählung beginnt ab 01:00 MEZ</span></span>`})()+
    `<span class="pend" style="flex-basis:100%">${byC}</span>`;
   rescount.innerHTML=`Ergebnisse eingetragen: <b>${done.length} von ${R.length}</b> Rennen.`;
 }
 function renderRaces(){const fc=document.getElementById('f-chamber').value,fr=document.getElementById('f-rating').value,fh=document.getElementById('f-held').value,q=search.value.toLowerCase().trim();
   let rows=DATA.races.map(r=>({...r,verdict:verdict(r.rating,r.result,r.held_by)}));
   rows=rows.filter(r=>(!fc||r.chamber===fc)&&(!fr||r.rating===fr)&&(!fh||r.held_by===fh)&&(!q||[r.label,r.state,r.incumbent,r.rating,r.rating2,r.chamber].join(' ').toLowerCase().includes(q)));
-  const val=(r,k)=>k==='rating'?RORD[r.rating]*1000+(r.chamber==='Senat'?0:1)*500:k==='verdict'?r.verdict.txt:(r[k]??'~');
+  const fl=document.getElementById('f-live').value;
+  rows=rows.filter(r=>!fl||(fl==='diff'?liveDiff(r):(r.live&&r.live.status===fl)));
+  const val=(r,k)=>k==='lv_lead'?(liveLead(r)||'~'):k==='lv_share'?(r.live&&r.live.pctD!=null?r.live.pctD-r.live.pctR:-999):k==='lv_cnt'?(r.live?.counted??-1):k==='lv_stat'?(r.live?.status||'~'):k==='rating'?RORD[r.rating]*1000+(r.chamber==='Senat'?0:1)*500:k==='verdict'?r.verdict.txt:(r[k]??'~');
   rows.sort((a,b)=>{const x=val(a,sortK),y=val(b,sortK);return (x>y?1:x<y?-1:a.label.localeCompare(b.label))*(sortAsc?1:-1)});
-  races.innerHTML='<thead><tr>'+COLS.map(c=>`<th data-k="${c.k}">${c.l}${sortK===c.k?(sortAsc?' ▲':' ▼'):''}</th>`).join('')+'</tr></thead><tbody>'+
-   rows.map(r=>`<tr><td><a href="${r.url}" target="_blank" rel="noopener"><b>${esc(r.label)}</b></a>${r.state?`<br><span class="pend">${esc(r.state)}</span>`:''}${r.special?' <span class="tag">Nachwahl</span>':''}</td>
-    <td>${pill(r.rating)}</td><td>${r.result?party(r.result):'<span class="pend">—</span>'}</td><td class="${r.verdict.cls}">${r.verdict.txt}</td>
-    <td>${pill(r.rating2)}</td><td>${r.chamber==='Senat'?pill(r.rating3):'<span class="pend">n. v.</span>'}</td><td>${esc(r.incumbent)}</td><td>${party(r.held_by)}</td><td>${r.chamber==='Senat'?'Senat':'Haus'}</td></tr>`).join('')+
-   (rows.length?'':'<tr><td colspan="9" class="pend">Keine Rennen für diesen Filter.</td></tr>')+'</tbody>';
+  races.innerHTML='<thead><tr>'+COLS.map(c=>`<th data-k="${c.k}"${c.lv?' class="lvh"':''}>${c.l}${sortK===c.k?(sortAsc?' ▲':' ▼'):''}</th>`).join('')+'</tr></thead><tbody>'+
+   rows.map(r=>{const l=r.live||{},ld=liveLead(r),df=liveDiff(r),hasN=l.votes>0||l.called;
+    const share=hasN&&l.pctD!=null||hasN&&l.pctR!=null?`<span class="d">${l.pctD!=null?pc(l.pctD):'–'}</span> / <span class="r">${l.pctR!=null?pc(l.pctR):'–'}</span>${l.pctI!=null?`<br><span class="pend">I ${pc(l.pctI)}</span>`:''}`:'<span class="pend">—</span>';
+    const cnt=hasN&&l.counted!=null?`${l.counted} %<span class="cnt"><i style="width:${Math.min(100,l.counted)}%"></i></span>`:'<span class="pend">—</span>';
+    const st=l.called?`<span class="ok">projiziert</span> ${party(l.winner)}`:hasN?'<span class="pend">offen</span>':`<span class="pend">${LIVE&&LIVE.status==='läuft'?'keine Zahlen':'ab 01:00 MEZ'}</span>`;
+    return `<tr${df?' class="livediff"':''}><td><a href="${r.url}" target="_blank" rel="noopener"><b>${esc(r.label)}</b></a>${r.state?`<br><span class="pend">${esc(r.state)}</span>`:''}${r.special?' <span class="tag">Nachwahl</span>':''}</td>
+    <td>${pill(r.rating)}</td><td>${ld?party(ld):'<span class="pend">—</span>'}${df?'<span class="diffb">≠ Prognose</span>':''}</td><td style="white-space:nowrap">${share}</td><td style="white-space:nowrap">${cnt}</td><td style="white-space:nowrap">${st}</td>
+    <td>${r.result?party(r.result)+(r.result_auto?' <span class="pend" title="automatisch aus AP-Projektion">(AP)</span>':''):'<span class="pend">—</span>'}</td><td class="${r.verdict.cls}">${r.verdict.txt}</td>
+    <td>${pill(r.rating2)}</td><td>${r.chamber==='Senat'?pill(r.rating3):'<span class="pend">n. v.</span>'}</td><td>${esc(r.incumbent)}</td><td>${party(r.held_by)}</td><td>${r.chamber==='Senat'?'Senat':'Haus'}</td></tr>`}).join('')+
+   (rows.length?'':'<tr><td colspan="13" class="pend">Keine Rennen für diesen Filter.</td></tr>')+'</tbody>';
   races.querySelectorAll('th').forEach(h=>h.onclick=()=>{const k=h.dataset.k;sortAsc=sortK===k?!sortAsc:true;sortK=k;renderRaces()});
 }
-['f-chamber','f-rating','f-held'].forEach(id=>document.getElementById(id).onchange=renderRaces);search.oninput=renderRaces;
+['f-chamber','f-rating','f-held','f-live'].forEach(id=>document.getElementById(id).onchange=renderRaces);search.oninput=renderRaces;
 
 /* --- Footer --- */
 footer.innerHTML=`<b>Quellen (mit Stand laut Quelle):</b><ul>${DATA.sources.map(s=>`<li><a href="${s.url}" target="_blank" rel="noopener">${esc(s.label)}</a> – Stand: ${esc(s.stand)}</li>`).join('')}</ul>
 <b>Nicht verfügbar / Einschränkungen:</b><ul>${DATA.missing.map(m=>`<li>${esc(m)}</li>`).join('')}</ul>
 <p><b>Wichtig:</b> Ratings (Solid/Likely/Lean/Toss-up) und Modellwahrscheinlichkeiten sind <b>Prognosen, keine Ergebnisse</b>. Senat „D“ schließt die mit den Demokraten stimmenden Unabhängigen ein. Inside-Elections-Gesamtzählung Haus: ${Object.entries(DATA.ie_counts.house).map(([k,v])=>k+' '+v).join(', ')}. Dashboard erstellt ${esc(DATA.meta.built)}.</p>`;
 
-function renderAll(){chamberKPIs('house');chamberKPIs('senate');seatBar('house');seatBar('senate');modelsTable();counters();renderRaces()}
+function renderAll(){liveCards();chamberKPIs('house');chamberKPIs('senate');seatBar('house');seatBar('senate');modelsTable();counters();renderRaces()}
 themebtn.onclick=()=>{document.body.classList.toggle('light');renderAll()};
 renderAll();
+/* Wahlnacht: Seite alle 5 Min. neu laden (bis 5.11.2026 12:00 MEZ) */
+if(Date.now()<Date.parse('2026-11-05T12:00:00+01:00'))setTimeout(()=>location.reload(),300000);
 </script>
 </body>
 </html>
