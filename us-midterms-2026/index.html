@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>US-Midterms 2026 – Prognose-Dashboard (Repräsentantenhaus &amp; Senat)</title>
+<!--
+  DATEN & ERGEBNISSE NACHTRAGEN
+  =============================
+  Alle Prognose- und Ergebnisdaten stehen im JSON-Block <script id="data" type="application/json"> direkt unten.
+  Ergebnisse eintragen (z. B. am 4.11.2026) – nur dieses JSON ändern, sonst nichts:
+    * house.result  / senate.result : {"D": <Sitze D>, "R": <Sitze R>, "undecided": <noch offen>, "control": "D"|"R", "stand": "4.11.2026 12:00 MEZ, Quelle …"}
+                                      (Senat: Gesamtsitze inkl. nicht zur Wahl stehender Sitze; Unabhängige mit D-Fraktion zu D zählen)
+    * races[i].result                : Gewinnerpartei als "D", "R" oder "I"  (null = ausstehend)
+  Das Dashboard berechnet daraus automatisch: "Ergebnisse eingetragen: x von N", Treffer/Abweichung je Rennen,
+  Prognose-Trefferquote (Lean-Rennen mit Favorit; Toss-ups haben keinen Favoriten und werden separat gezählt)
+  sowie Treffer/Abweichung bei Mehrheit und Sitzzahl je Kammer und je Modell.
+  Farben sind fest in JS hinterlegt (kein getComputedStyle – iOS-Safari-Fix).
+-->
+<script id="data" type="application/json">
+{
+ "meta": {
+  "title": "US-Midterms 2026 – Prognose-Dashboard",
+  "election_date": "2026-11-03",
+  "built": "2026-11-03 09:30 MEZ",
+  "primary_rater": "Cook Political Report",
+  "note": "Alle Werte sind Prognosen (Ratings/Modelle/Märkte), keine Ergebnisse."
+ },
+ "house": {
+  "total": 435,
+  "majority": 218,
+  "categories": [
+   {
+    "key": "Solid D",
+    "count": 186,
+    "held_D": 183,
+    "held_R": 2,
+    "held_I": 1
+   },
+   {
+    "key": "Likely D",
+    "count": 18,
+    "held_D": 17,
+    "held_R": 1,
+    "held_I": 0
+   },
+   {
+    "key": "Lean D",
+    "count": 18,
+    "held_D": 5,
+    "held_R": 13,
+    "held_I": 0
+   },
+   {
+    "key": "Toss-up",
+    "count": 18,
+    "held_D": 4,
+    "held_R": 14,
+    "held_I": 0
+   },
+   {
+    "key": "Lean R",
+    "count": 18,
+    "held_D": 3,
+    "held_R": 15,
+    "held_I": 0
+   },
+   {
+    "key": "Likely R",
+    "count": 17,
+    "held_D": 2,
+    "held_R": 15,
+    "held_I": 0
+   },
+   {
+    "key": "Solid R",
+    "count": 160,
+    "held_D": 2,
+    "held_R": 158,
+    "held_I": 0
+   }
+  ],
+  "forecast": {
+   "D": 222,
+   "R": 195,
+   "tossup": 18,
+   "basis": "Cook: Solid+Likely+Lean je Partei",
+   "stand": "Cook Political Report, 2. Nov. 2026",
+   "url": "https://www.cookpolitical.com/ratings/house-race-ratings"
+  },
+  "result": {
+   "D": null,
+   "R": null,
+   "undecided": null,
+   "control": null,
+   "stand": null
+  }
+ },
+ "senate": {
+  "total": 100,
+  "majority": 51,
+  "tiebreak": "Vizepräsident (J.D. Vance, R) entscheidet bei 50:50",
+  "not_up": {
+   "D": 34,
+   "R": 31,
+   "note": "D inkl. 2 Unabhängige, die mit den Demokraten stimmen (King, Sanders)"
+  },
+  "up": 35,
+  "specials": [
+   "OH (Husted)",
+   "FL (Moody)"
+  ],
+  "categories": [
+   {
+    "key": "Solid D",
+    "count": 9,
+    "held_D": 9,
+    "held_R": 0,
+    "held_I": 0
+   },
+   {
+    "key": "Likely D",
+    "count": 2,
+    "held_D": 1,
+    "held_R": 1,
+    "held_I": 0
+   },
+   {
+    "key": "Lean D",
+    "count": 3,
+    "held_D": 3,
+    "held_R": 0,
+    "held_I": 0
+   },
+   {
+    "key": "Toss-up",
+    "count": 6,
+    "held_D": 0,
+    "held_R": 6,
+    "held_I": 0
+   },
+   {
+    "key": "Lean R",
+    "count": 2,
+    "held_D": 0,
+    "held_R": 2,
+    "held_I": 0
+   },
+   {
+    "key": "Likely R",
+    "count": 2,
+    "held_D": 0,
+    "held_R": 2,
+    "held_I": 0
+   },
+   {
+    "key": "Solid R",
+    "count": 11,
+    "held_D": 0,
+    "held_R": 11,
+    "held_I": 0
+   }
+  ],
+  "forecast": {
+   "D": 48,
+   "R": 46,
+   "tossup": 6,
+   "basis": "Cook: nicht zur Wahl + Solid/Likely/Lean je Partei",
+   "stand": "Cook Political Report, 2. Nov. 2026",
+   "url": "https://www.cookpolitical.com/ratings/senate-race-ratings"
+  },
+  "result": {
+   "D": null,
+   "R": null,
+   "undecided": null,
+   "control": null,
+   "stand": null
+  }
+ },
+ "models": [
+  {
+   "source": "Silver Bulletin (FLIPR, finales Update)",
+   "kind": "Modell",
+   "house_d_prob": 95,
+   "senate_d_prob": 80,
+   "house_seats": "Ø D-Gewinn +25 Sitze",
+   "senate_seats": null,
+   "stand": "3. Nov. 2026 (Zahlen laut Axios, 3.11.; Topline-Grafik auf natesilver.net nur per JS)",
+   "url": "https://www.natesilver.net/p/nate-silver-2026-midterm-election-polls-model",
+   "url2": "https://www.axios.com/2026/11/03/2026-midterms-polls-predictions"
+  },
+  {
+   "source": "Decision Desk HQ (finaler Vorwahl-Lauf)",
+   "kind": "Modell",
+   "house_d_prob": 84,
+   "senate_d_prob": 65,
+   "house_seats": "D 241 (Projektion)",
+   "senate_seats": "D 52 – R 48",
+   "stand": "2. Nov. 2026, 15:03 ET (21:03 MEZ)",
+   "url": "https://votes.decisiondeskhq.com/forecast/2026"
+  },
+  {
+   "source": "Split Ticket / The Argument (finales Modell)",
+   "kind": "Modell",
+   "house_d_prob": 92,
+   "senate_d_prob": 77,
+   "house_seats": "D netto +24",
+   "senate_seats": "D 53 – R 47",
+   "stand": "2. Nov. 2026",
+   "url": "https://www.theargumentmag.com/p/republicans-see-a-light-at-the-end"
+  },
+  {
+   "source": "The Economist",
+   "kind": "Modell",
+   "house_d_prob": 95,
+   "senate_d_prob": 53,
+   "house_seats": null,
+   "senate_seats": "„nahezu Münzwurf“",
+   "stand": "Haus: Notiz 30. Okt. 2026; Senat: 53 % laut Economist-Artikel (derStandard, 2. Nov. 2026); Seite zuletzt geändert 2. Nov. 2026",
+   "url": "https://www.economist.com/interactive/2026/us-midterms/prediction-model/house",
+   "url2": "https://www.derstandard.de/story/3000000346543/our-forecast-of-the-midterms-outcome"
+  },
+  {
+   "source": "Sabato’s Crystal Ball (finale Ratings)",
+   "kind": "Rating",
+   "house_d_prob": null,
+   "senate_d_prob": null,
+   "house_seats": "D 239 – R 196 (mind. Leans)",
+   "senate_seats": "D 53 – R 47 (mind. Leans)",
+   "stand": "2. Nov. 2026",
+   "url": "https://centerforpolitics.org/crystalball/2026finalratings/"
+  },
+  {
+   "source": "Inside Elections",
+   "kind": "Rating",
+   "house_d_prob": null,
+   "senate_d_prob": null,
+   "house_seats": "D +20 bis +30 Sitze",
+   "senate_seats": null,
+   "stand": "29. Okt. 2026, 13:05 CDT (19:05 MEZ)",
+   "url": "https://insideelections.com/ratings/house"
+  },
+  {
+   "source": "Polymarket",
+   "kind": "Prognosemarkt",
+   "house_d_prob": 94.5,
+   "senate_d_prob": 77.5,
+   "house_seats": null,
+   "senate_seats": null,
+   "stand": "abgerufen 3. Nov. 2026, 09:10 MEZ",
+   "url": "https://polymarket.com/event/which-party-will-win-the-house-in-2026",
+   "url2": "https://polymarket.com/event/which-party-will-win-the-senate-in-2026"
+  },
+  {
+   "source": "Kalshi",
+   "kind": "Prognosemarkt",
+   "house_d_prob": 93.9,
+   "senate_d_prob": 75,
+   "house_seats": null,
+   "senate_seats": null,
+   "stand": "abgerufen 3. Nov. 2026, 09:11 MEZ (letzter Preis)",
+   "url": "https://kalshi.com/markets/controlh",
+   "url2": "https://kalshi.com/markets/controls"
+  }
+ ],
+ "ie_counts": {
+  "house": {
+   "Solid D": 190,
+   "Likely D": 5,
+   "Lean D": 7,
+   "Tilt D": 22,
+   "Toss-up": 13,
+   "Tilt R": 5,
+   "Lean R": 11,
+   "Likely R": 19,
+   "Solid R": 163
+  },
+  "senate": {
+   "Tilt D": 4,
+   "Likely D": 1,
+   "Toss-up": 4,
+   "Tilt R": 2,
+   "Likely R": 3,
+   "Lean D": 2,
+   "Solid R": 10,
+   "Solid D": 9
+  }
+ },
+ "races": [
+  {
+   "id": "H-AZ-01",
+   "chamber": "Repräsentantenhaus",
+   "label": "AZ-01",
+   "rating": "Lean D",
+   "incumbent": "OPEN (Schweikert)",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/481756",
+   "result": null
+  },
+  {
+   "id": "H-AZ-06",
+   "chamber": "Repräsentantenhaus",
+   "label": "AZ-06",
+   "rating": "Lean D",
+   "incumbent": "Ciscomani",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/481781",
+   "result": null
+  },
+  {
+   "id": "H-CA-48",
+   "chamber": "Repräsentantenhaus",
+   "label": "CA-48",
+   "rating": "Lean D",
+   "incumbent": "OPEN (Issa)",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/482056",
+   "result": null
+  },
+  {
+   "id": "H-CO-08",
+   "chamber": "Repräsentantenhaus",
+   "label": "CO-08",
+   "rating": "Lean D",
+   "incumbent": "Evans",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/482481",
+   "result": null
+  },
+  {
+   "id": "H-FL-25",
+   "chamber": "Repräsentantenhaus",
+   "label": "FL-25",
+   "rating": "Lean D",
+   "incumbent": "Moskowitz",
+   "held_by": "D",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/482636",
+   "result": null
+  },
+  {
+   "id": "H-IA-01",
+   "chamber": "Repräsentantenhaus",
+   "label": "IA-01",
+   "rating": "Lean D",
+   "incumbent": "Miller-Meeks",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483086",
+   "result": null
+  },
+  {
+   "id": "H-IA-03",
+   "chamber": "Repräsentantenhaus",
+   "label": "IA-03",
+   "rating": "Lean D",
+   "incumbent": "Nunn",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483096",
+   "result": null
+  },
+  {
+   "id": "H-NC-11",
+   "chamber": "Repräsentantenhaus",
+   "label": "NC-11",
+   "rating": "Lean D",
+   "incumbent": "OPEN (Edwards)",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483756",
+   "result": null
+  },
+  {
+   "id": "H-NJ-07",
+   "chamber": "Repräsentantenhaus",
+   "label": "NJ-07",
+   "rating": "Lean D",
+   "incumbent": "Kean Jr.",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483531",
+   "result": null
+  },
+  {
+   "id": "H-NM-02",
+   "chamber": "Repräsentantenhaus",
+   "label": "NM-02",
+   "rating": "Lean D",
+   "incumbent": "Vasquez",
+   "held_by": "D",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483566",
+   "result": null
+  },
+  {
+   "id": "H-OH-09",
+   "chamber": "Repräsentantenhaus",
+   "label": "OH-09",
+   "rating": "Lean D",
+   "incumbent": "Kaptur",
+   "held_by": "D",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483821",
+   "result": null
+  },
+  {
+   "id": "H-PA-07",
+   "chamber": "Repräsentantenhaus",
+   "label": "PA-07",
+   "rating": "Lean D",
+   "incumbent": "Mackenzie",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483941",
+   "result": null
+  },
+  {
+   "id": "H-PA-08",
+   "chamber": "Repräsentantenhaus",
+   "label": "PA-08",
+   "rating": "Lean D",
+   "incumbent": "Bresnahan",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483946",
+   "result": null
+  },
+  {
+   "id": "H-PA-10",
+   "chamber": "Repräsentantenhaus",
+   "label": "PA-10",
+   "rating": "Lean D",
+   "incumbent": "Perry",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483956",
+   "result": null
+  },
+  {
+   "id": "H-TX-34",
+   "chamber": "Repräsentantenhaus",
+   "label": "TX-34",
+   "rating": "Lean D",
+   "incumbent": "Gonzalez",
+   "held_by": "D",
+   "open": false,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/485386",
+   "result": null
+  },
+  {
+   "id": "H-VA-02",
+   "chamber": "Repräsentantenhaus",
+   "label": "VA-02",
+   "rating": "Lean D",
+   "incumbent": "Kiggans",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/485441",
+   "result": null
+  },
+  {
+   "id": "H-WA-03",
+   "chamber": "Repräsentantenhaus",
+   "label": "WA-03",
+   "rating": "Lean D",
+   "incumbent": "Perez",
+   "held_by": "D",
+   "open": false,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/485501",
+   "result": null
+  },
+  {
+   "id": "H-WI-03",
+   "chamber": "Repräsentantenhaus",
+   "label": "WI-03",
+   "rating": "Lean D",
+   "incumbent": "Van Orden",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/485561",
+   "result": null
+  },
+  {
+   "id": "H-CA-22",
+   "chamber": "Repräsentantenhaus",
+   "label": "CA-22",
+   "rating": "Toss-up",
+   "incumbent": "Valadao",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/481926",
+   "result": null
+  },
+  {
+   "id": "H-CO-05",
+   "chamber": "Repräsentantenhaus",
+   "label": "CO-05",
+   "rating": "Toss-up",
+   "incumbent": "Crank",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/482466",
+   "result": null
+  },
+  {
+   "id": "H-FL-14",
+   "chamber": "Repräsentantenhaus",
+   "label": "FL-14",
+   "rating": "Toss-up",
+   "incumbent": "Castor",
+   "held_by": "D",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/482581",
+   "result": null
+  },
+  {
+   "id": "H-FL-22",
+   "chamber": "Repräsentantenhaus",
+   "label": "FL-22",
+   "rating": "Toss-up",
+   "incumbent": "OPEN (Frankel)",
+   "held_by": "D",
+   "open": true,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/482621",
+   "result": null
+  },
+  {
+   "id": "H-IA-02",
+   "chamber": "Repräsentantenhaus",
+   "label": "IA-02",
+   "rating": "Toss-up",
+   "incumbent": "OPEN (Hinson)",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483091",
+   "result": null
+  },
+  {
+   "id": "H-KY-06",
+   "chamber": "Repräsentantenhaus",
+   "label": "KY-06",
+   "rating": "Toss-up",
+   "incumbent": "OPEN (Barr)",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483151",
+   "result": null
+  },
+  {
+   "id": "H-MI-04",
+   "chamber": "Repräsentantenhaus",
+   "label": "MI-04",
+   "rating": "Toss-up",
+   "incumbent": "Huizenga",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483296",
+   "result": null
+  },
+  {
+   "id": "H-MI-07",
+   "chamber": "Repräsentantenhaus",
+   "label": "MI-07",
+   "rating": "Toss-up",
+   "incumbent": "Barrett",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483311",
+   "result": null
+  },
+  {
+   "id": "H-MI-10",
+   "chamber": "Repräsentantenhaus",
+   "label": "MI-10",
+   "rating": "Toss-up",
+   "incumbent": "OPEN (James)",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Tilt R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483326",
+   "result": null
+  },
+  {
+   "id": "H-MT-01",
+   "chamber": "Repräsentantenhaus",
+   "label": "MT-01",
+   "rating": "Toss-up",
+   "incumbent": "OPEN (Zinke)",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483446",
+   "result": null
+  },
+  {
+   "id": "H-NC-01",
+   "chamber": "Repräsentantenhaus",
+   "label": "NC-01",
+   "rating": "Toss-up",
+   "incumbent": "Davis",
+   "held_by": "D",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483706",
+   "result": null
+  },
+  {
+   "id": "H-NY-17",
+   "chamber": "Repräsentantenhaus",
+   "label": "NY-17",
+   "rating": "Toss-up",
+   "incumbent": "Lawler",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483656",
+   "result": null
+  },
+  {
+   "id": "H-OH-07",
+   "chamber": "Repräsentantenhaus",
+   "label": "OH-07",
+   "rating": "Toss-up",
+   "incumbent": "Miller",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483811",
+   "result": null
+  },
+  {
+   "id": "H-PA-01",
+   "chamber": "Repräsentantenhaus",
+   "label": "PA-01",
+   "rating": "Toss-up",
+   "incumbent": "Fitzpatrick",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483911",
+   "result": null
+  },
+  {
+   "id": "H-SC-01",
+   "chamber": "Repräsentantenhaus",
+   "label": "SC-01",
+   "rating": "Toss-up",
+   "incumbent": "OPEN (Mace)",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Tilt R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/485136",
+   "result": null
+  },
+  {
+   "id": "H-TX-35",
+   "chamber": "Repräsentantenhaus",
+   "label": "TX-35",
+   "rating": "Toss-up",
+   "incumbent": "OPEN (Casar)",
+   "held_by": "D",
+   "open": true,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/485391",
+   "result": null
+  },
+  {
+   "id": "H-TX-15",
+   "chamber": "Repräsentantenhaus",
+   "label": "TX-15",
+   "rating": "Toss-up",
+   "incumbent": "De La Cruz",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/485291",
+   "result": null
+  },
+  {
+   "id": "H-VA-01",
+   "chamber": "Repräsentantenhaus",
+   "label": "VA-01",
+   "rating": "Toss-up",
+   "incumbent": "Wittman",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/485436",
+   "result": null
+  },
+  {
+   "id": "H-AK-AL",
+   "chamber": "Repräsentantenhaus",
+   "label": "AK-AL",
+   "rating": "Lean R",
+   "incumbent": "Begich III",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Likely R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/481751",
+   "result": null
+  },
+  {
+   "id": "H-AL-02",
+   "chamber": "Repräsentantenhaus",
+   "label": "AL-02",
+   "rating": "Lean R",
+   "incumbent": "Figures",
+   "held_by": "D",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/481721",
+   "result": null
+  },
+  {
+   "id": "H-AZ-02",
+   "chamber": "Repräsentantenhaus",
+   "label": "AZ-02",
+   "rating": "Lean R",
+   "incumbent": "Crane",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Lean R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/481761",
+   "result": null
+  },
+  {
+   "id": "H-CO-04",
+   "chamber": "Repräsentantenhaus",
+   "label": "CO-04",
+   "rating": "Lean R",
+   "incumbent": "Boebert",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Likely R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/482461",
+   "result": null
+  },
+  {
+   "id": "H-FL-07",
+   "chamber": "Repräsentantenhaus",
+   "label": "FL-07",
+   "rating": "Lean R",
+   "incumbent": "OPEN (Mills)",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Likely R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/482546",
+   "result": null
+  },
+  {
+   "id": "H-FL-09",
+   "chamber": "Repräsentantenhaus",
+   "label": "FL-09",
+   "rating": "Lean R",
+   "incumbent": "Soto",
+   "held_by": "D",
+   "open": false,
+   "special": false,
+   "rating2": "Likely R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/482556",
+   "result": null
+  },
+  {
+   "id": "H-FL-13",
+   "chamber": "Repräsentantenhaus",
+   "label": "FL-13",
+   "rating": "Lean R",
+   "incumbent": "Luna",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Lean R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/482576",
+   "result": null
+  },
+  {
+   "id": "H-FL-27",
+   "chamber": "Repräsentantenhaus",
+   "label": "FL-27",
+   "rating": "Lean R",
+   "incumbent": "Salazar",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Lean R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/482646",
+   "result": null
+  },
+  {
+   "id": "H-IN-05",
+   "chamber": "Repräsentantenhaus",
+   "label": "IN-05",
+   "rating": "Lean R",
+   "incumbent": "Spartz",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Likely R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483061",
+   "result": null
+  },
+  {
+   "id": "H-ME-02",
+   "chamber": "Repräsentantenhaus",
+   "label": "ME-02",
+   "rating": "Lean R",
+   "incumbent": "OPEN (Golden)",
+   "held_by": "D",
+   "open": true,
+   "special": false,
+   "rating2": "Lean R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483191",
+   "result": null
+  },
+  {
+   "id": "H-MN-01",
+   "chamber": "Repräsentantenhaus",
+   "label": "MN-01",
+   "rating": "Lean R",
+   "incumbent": "Finstad",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Lean R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483346",
+   "result": null
+  },
+  {
+   "id": "H-NV-02",
+   "chamber": "Repräsentantenhaus",
+   "label": "NV-02",
+   "rating": "Lean R",
+   "incumbent": "OPEN (Amodei)",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Tilt R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483476",
+   "result": null
+  },
+  {
+   "id": "H-NY-21",
+   "chamber": "Repräsentantenhaus",
+   "label": "NY-21",
+   "rating": "Lean R",
+   "incumbent": "OPEN (Stefanik)",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Lean R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483676",
+   "result": null
+  },
+  {
+   "id": "H-OH-10",
+   "chamber": "Repräsentantenhaus",
+   "label": "OH-10",
+   "rating": "Lean R",
+   "incumbent": "Turner",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Lean R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483826",
+   "result": null
+  },
+  {
+   "id": "H-OH-15",
+   "chamber": "Repräsentantenhaus",
+   "label": "OH-15",
+   "rating": "Lean R",
+   "incumbent": "Carey",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Lean R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/483851",
+   "result": null
+  },
+  {
+   "id": "H-TX-23",
+   "chamber": "Repräsentantenhaus",
+   "label": "TX-23",
+   "rating": "Lean R",
+   "incumbent": "VACANT",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Likely R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/485331",
+   "result": null
+  },
+  {
+   "id": "H-VA-05",
+   "chamber": "Repräsentantenhaus",
+   "label": "VA-05",
+   "rating": "Lean R",
+   "incumbent": "McGuire",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Lean R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/485456",
+   "result": null
+  },
+  {
+   "id": "H-WI-01",
+   "chamber": "Repräsentantenhaus",
+   "label": "WI-01",
+   "rating": "Lean R",
+   "incumbent": "Steil",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Lean R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/house/race/485551",
+   "result": null
+  },
+  {
+   "id": "S-MI",
+   "chamber": "Senat",
+   "label": "MI-Sen",
+   "state": "Michigan",
+   "rating": "Lean D",
+   "incumbent": "OPEN (Peters)",
+   "held_by": "D",
+   "open": true,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": "Lean D",
+   "url": "https://www.cookpolitical.com/senate/race/488606",
+   "result": null
+  },
+  {
+   "id": "S-MN",
+   "chamber": "Senat",
+   "label": "MN-Sen",
+   "state": "Minnesota",
+   "rating": "Lean D",
+   "incumbent": "OPEN (Smith)",
+   "held_by": "D",
+   "open": true,
+   "special": false,
+   "rating2": "Lean D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/senate/race/488611",
+   "result": null
+  },
+  {
+   "id": "S-NH",
+   "chamber": "Senat",
+   "label": "NH-Sen",
+   "state": "New Hampshire",
+   "rating": "Lean D",
+   "incumbent": "OPEN (Shaheen)",
+   "held_by": "D",
+   "open": true,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/senate/race/488636",
+   "result": null
+  },
+  {
+   "id": "S-AK",
+   "chamber": "Senat",
+   "label": "AK-Sen",
+   "state": "Alaska",
+   "rating": "Toss-up",
+   "incumbent": "Sullivan",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": "Lean D",
+   "url": "https://www.cookpolitical.com/senate/race/488531",
+   "result": null
+  },
+  {
+   "id": "S-IA",
+   "chamber": "Senat",
+   "label": "IA-Sen",
+   "state": "Iowa",
+   "rating": "Toss-up",
+   "incumbent": "OPEN (Ernst)",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": "Lean R",
+   "url": "https://www.cookpolitical.com/senate/race/488566",
+   "result": null
+  },
+  {
+   "id": "S-KS",
+   "chamber": "Senat",
+   "label": "KS-Sen",
+   "state": "Kansas",
+   "rating": "Toss-up",
+   "incumbent": "Marshall",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": "Lean D",
+   "url": "https://www.cookpolitical.com/senate/race/488581",
+   "result": null
+  },
+  {
+   "id": "S-ME",
+   "chamber": "Senat",
+   "label": "ME-Sen",
+   "state": "Maine",
+   "rating": "Toss-up",
+   "incumbent": "Collins",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Toss-up",
+   "rating2_source": "Inside Elections",
+   "rating3": "Lean D",
+   "url": "https://www.cookpolitical.com/senate/race/488601",
+   "result": null
+  },
+  {
+   "id": "S-OH",
+   "chamber": "Senat",
+   "label": "OH-Sen",
+   "state": "Ohio",
+   "rating": "Toss-up",
+   "incumbent": "Husted",
+   "held_by": "R",
+   "open": false,
+   "special": true,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": "Lean D",
+   "url": "https://www.cookpolitical.com/senate/race/488651",
+   "result": null
+  },
+  {
+   "id": "S-TX",
+   "chamber": "Senat",
+   "label": "TX-Sen",
+   "state": "Texas",
+   "rating": "Toss-up",
+   "incumbent": "OPEN (Cornyn)",
+   "held_by": "R",
+   "open": true,
+   "special": false,
+   "rating2": "Tilt D",
+   "rating2_source": "Inside Elections",
+   "rating3": "Lean D",
+   "url": "https://www.cookpolitical.com/senate/race/488686",
+   "result": null
+  },
+  {
+   "id": "S-NE",
+   "chamber": "Senat",
+   "label": "NE-Sen",
+   "state": "Nebraska",
+   "rating": "Lean R",
+   "incumbent": "Ricketts",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt R",
+   "rating2_source": "Inside Elections",
+   "rating3": null,
+   "url": "https://www.cookpolitical.com/senate/race/488631",
+   "result": null
+  },
+  {
+   "id": "S-SC",
+   "chamber": "Senat",
+   "label": "SC-Sen",
+   "state": "South Carolina",
+   "rating": "Lean R",
+   "incumbent": "Graham",
+   "held_by": "R",
+   "open": false,
+   "special": false,
+   "rating2": "Tilt R",
+   "rating2_source": "Inside Elections",
+   "rating3": "Lean R",
+   "url": "https://www.cookpolitical.com/senate/race/488671",
+   "result": null
+  }
+ ],
+ "sources": [
+  {
+   "label": "Cook Political Report – House Race Ratings (Primärquelle)",
+   "url": "https://www.cookpolitical.com/ratings/house-race-ratings",
+   "stand": "2. Nov. 2026"
+  },
+  {
+   "label": "Cook Political Report – Senate Race Ratings (Primärquelle)",
+   "url": "https://www.cookpolitical.com/ratings/senate-race-ratings",
+   "stand": "2. Nov. 2026"
+  },
+  {
+   "label": "Inside Elections – House Ratings (Zweit-Rating, JSON-Export)",
+   "url": "https://insideelections.com/ratings/house",
+   "stand": "29. Okt. 2026, 19:05 MEZ"
+  },
+  {
+   "label": "Inside Elections – Senate Ratings (Zweit-Rating)",
+   "url": "https://insideelections.com/ratings/senate",
+   "stand": "29. Okt. 2026, 19:05 MEZ"
+  },
+  {
+   "label": "Sabato’s Crystal Ball – Final 2026 Ratings",
+   "url": "https://centerforpolitics.org/crystalball/2026finalratings/",
+   "stand": "2. Nov. 2026"
+  },
+  {
+   "label": "Silver Bulletin – FLIPR 2026",
+   "url": "https://www.natesilver.net/p/nate-silver-2026-midterm-election-polls-model",
+   "stand": "3. Nov. 2026"
+  },
+  {
+   "label": "Axios – Final polls, models and markets (Silver-, Kalshi-Zahlen)",
+   "url": "https://www.axios.com/2026/11/03/2026-midterms-polls-predictions",
+   "stand": "3. Nov. 2026"
+  },
+  {
+   "label": "Decision Desk HQ – 2026 Forecast",
+   "url": "https://votes.decisiondeskhq.com/forecast/2026",
+   "stand": "2. Nov. 2026, 21:03 MEZ"
+  },
+  {
+   "label": "Split Ticket / The Argument – finales Modell",
+   "url": "https://www.theargumentmag.com/p/republicans-see-a-light-at-the-end",
+   "stand": "2. Nov. 2026"
+  },
+  {
+   "label": "The Economist – House-Modell",
+   "url": "https://www.economist.com/interactive/2026/us-midterms/prediction-model/house",
+   "stand": "30. Okt./2. Nov. 2026"
+  },
+  {
+   "label": "The Economist – Senate-Modell",
+   "url": "https://www.economist.com/interactive/2026/us-midterms/prediction-model/senate",
+   "stand": "2. Nov. 2026"
+  },
+  {
+   "label": "Polymarket (Prognosemarkt)",
+   "url": "https://polymarket.com/event/which-party-will-win-the-house-in-2026",
+   "stand": "3. Nov. 2026, 09:10 MEZ"
+  },
+  {
+   "label": "Kalshi (Prognosemarkt)",
+   "url": "https://kalshi.com/markets/controlh",
+   "stand": "3. Nov. 2026, 09:11 MEZ"
+  }
+ ],
+ "missing": [
+  "FiveThirtyEight existiert nicht mehr (von ABC/Disney am 5. März 2025 eingestellt) – daher keine 538-Werte.",
+  "RealClearPolitics/RealClearPolling war nicht abrufbar (403/404, Bot-Schutz) – keine RCP-Werte.",
+  "Sabato’s Crystal Ball: Haus-Einzelratings nur als Bild/JS – nur Gesamtsummen; Senats-Ratings nur für im Artikel genannte Staaten.",
+  "Silver Bulletin: Topline-Grafik nur per JS/Paywall – Wahrscheinlichkeiten aus Axios-Bericht vom 3. Nov. 2026; keine Median-Sitzzahl, nur Ø-Gewinn.",
+  "The Economist: Senats-Wahrscheinlichkeit nicht maschinenlesbar auf der Live-Seite; 53 % aus Economist-Artikel (veröffentlicht via derStandard, 2. Nov.).",
+  "Race to the WH: Seite rendert Zahlen nur per JavaScript – nicht verwendet."
+ ]
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--border:#262a33;--text:#e7e9ee;--muted:#8b93a3;--accent:#4f8cff;--good:#22c55e;--bad:#f59e0b;--d:#3b82f6;--r:#ef4444;--t:#a78bfa}
+body.light{--bg:#f6f7f9;--card:#fff;--border:#e3e6eb;--text:#14171c;--muted:#5f6878}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:20px 28px;border-bottom:1px solid var(--border)}
+h1{font-size:20px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:4px}
+h2{font-size:17px;margin:26px 0 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+select,input,button{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font:inherit;font-size:13px}
+button{cursor:pointer}main{padding:8px 28px 24px;max-width:1400px;margin:0 auto}
+.banner{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--t);border-radius:10px;padding:10px 14px;font-size:13px;margin-top:16px;line-height:1.45}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
+.kpi .label{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+.kpi .value{font-size:26px;font-weight:650;margin-top:6px}.kpi .value small{font-size:13px;font-weight:500;color:var(--muted)}
+.kpi .res{font-size:12px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:var(--muted)}
+.kpi .src{font-size:11px;color:var(--muted);margin-top:4px}
+.tag{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:rgba(167,139,250,.18);color:#a78bfa;vertical-align:middle}
+.tag.res{background:rgba(34,197,94,.15);color:#22c55e}
+.d{color:var(--d)}.r{color:var(--r)}.t{color:var(--t)}
+.ok{color:var(--good);font-weight:600}.miss{color:var(--bad);font-weight:600}.pend{color:var(--muted)}
+.card h3{margin:0 0 10px;font-size:14px;font-weight:600}.seatbox{position:relative;height:150px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:860px){.grid2{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px 9px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:500;cursor:pointer;user-select:none;white-space:nowrap}td.num,th.num{text-align:right}
+.tablewrap{overflow-x:auto}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;color:#0f1115}
+.counter{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:13px;margin:4px 0 12px}
+.counter b{font-size:15px}
+footer{color:var(--muted);font-size:12px;padding:8px 28px 32px;max-width:1400px;margin:0 auto;line-height:1.55}
+footer a,td a{color:var(--accent)}footer ul{padding-left:18px;margin:6px 0}
+@media(max-width:520px){main,header,footer{padding-left:14px;padding-right:14px}.kpi .value{font-size:22px}h1{font-size:18px}.seatbox{height:170px}th,td{padding:7px 6px;font-size:12px}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>US-Midterms 2026: Prognosen für Repräsentantenhaus &amp; Senat</h1>
+  <div class="sub" id="subtitle"></div></div>
+  <div class="controls"><button id="themebtn">Hell/Dunkel</button></div>
+</header>
+<main>
+  <div class="banner"><b>Hinweis:</b> Alle Zahlen auf dieser Seite sind <b>Prognosen</b> (Ratings, Modelle, Prognosemärkte) – <b>keine Ergebnisse</b>. Wahltag ist Di, 3. Nov. 2026. Die Spalten/Felder „Ergebnis“ werden nach Auszählung im JSON-Block nachgetragen. <span id="rescount"></span></div>
+
+  <h2>1 · Repräsentantenhaus <span class="tag">Prognose</span></h2>
+  <section class="kpis" id="kpis-house"></section>
+  <div class="card"><h3 id="bar-house-title"></h3><div class="seatbox"><canvas id="bar-house"></canvas></div><div class="legend" id="leg-house"></div></div>
+
+  <h2>2 · Senat <span class="tag">Prognose</span></h2>
+  <section class="kpis" id="kpis-senate"></section>
+  <div class="card"><h3 id="bar-senate-title"></h3><div class="seatbox"><canvas id="bar-senate"></canvas></div><div class="legend" id="leg-senate"></div></div>
+
+  <h2>Modelle, Ratings &amp; Märkte im Vergleich <span class="tag">Prognose</span></h2>
+  <div class="card"><div class="tablewrap"><table id="models"></table></div>
+  <div class="sub" style="margin-top:8px">Wahrscheinlichkeit = Chance der <b>Demokraten</b> auf die Mehrheit. Prognosemärkte (Polymarket, Kalshi) sind keine Modelle, sondern Handelspreise – nur ergänzend.</div></div>
+
+  <h2>3 · Alle Lean D / Toss-up / Lean R-Rennen <span class="tag">Prognose</span> <span class="tag res">Ergebnis</span></h2>
+  <div class="card">
+    <div class="counter" id="counter"></div>
+    <div class="controls" style="margin-bottom:10px">
+      <select id="f-chamber"><option value="">Beide Kammern</option><option>Repräsentantenhaus</option><option>Senat</option></select>
+      <select id="f-rating"><option value="">Alle Ratings</option><option>Lean D</option><option>Toss-up</option><option>Lean R</option></select>
+      <select id="f-held"><option value="">Alle Amtsinhaber</option><option value="D">Sitz gehalten von D</option><option value="R">Sitz gehalten von R</option></select>
+      <input id="search" placeholder="Suchen (z. B. PA, Lawler, OPEN)…" style="min-width:220px">
+    </div>
+    <div class="tablewrap"><table id="races"></table></div>
+    <div class="sub" style="margin-top:8px">Primär-Rating: Cook Political Report (2. Nov. 2026). Zweit-Rating: Inside Elections (29. Okt. 2026; inkl. „Tilt“-Stufe). Sabato nur für Senatsrennen, die im finalen Artikel genannt sind. Treffer/Abweichung: Lean D → Treffer bei D-Sieg, Lean R → Treffer bei R-Sieg; Toss-ups haben keinen Favoriten (zeigt Halten/Wechsel).</div>
+  </div>
+</main>
+<footer id="footer"></footer>
+<script>
+const DATA=JSON.parse(document.getElementById('data').textContent);
+/* Farben fest in JS (iOS Safari zeichnete Charts schwarz bei CSS-Variablen) */
+const COL={'D nicht zur Wahl':'#1e3a8a','Solid D':'#3b82f6','Likely D':'#7fabf8','Lean D':'#bfd5fc','Toss-up':'#a78bfa','Lean R':'#fbc4c4','Likely R':'#f58a8a','Solid R':'#ef4444','R nicht zur Wahl':'#7f1d1d','Tilt D':'#dbe7fe','Tilt R':'#fde0e0'};
+const THEME={dark:{text:'#e7e9ee',muted:'#8b93a3',grid:'#262a33',marker:'#ffffff'},light:{text:'#14171c',muted:'#5f6878',grid:'#e3e6eb',marker:'#111111'}};
+const th=()=>THEME[document.body.classList.contains('light')?'light':'dark'];
+const PN={D:'Demokraten',R:'Republikaner',I:'Unabhängig'};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pill=k=>k?`<span class="pill" style="background:${COL[k]||'#9ca3af'}">${esc(k)}</span>`:'<span class="pend">—</span>';
+const pc=v=>v==null?'—':v.toLocaleString('de-DE',{maximumFractionDigits:1})+' %';
+const party=p=>p?`<b class="${p==='D'?'d':p==='R'?'r':''}">${p}</b>`:'—';
+subtitle.textContent=`Wahltag 3. Nov. 2026 · Primärquelle: ${DATA.meta.primary_rater} · Dashboard erstellt ${DATA.meta.built}`;
+
+/* --- Bewertung Rennen --- */
+function favOf(r){return r==='Lean D'||r==='Likely D'||r==='Solid D'||r==='Tilt D'?'D':r==='Lean R'||r==='Likely R'||r==='Solid R'||r==='Tilt R'?'R':null}
+function verdict(rating,res,held){if(!res)return{cls:'pend',txt:'ausstehend'};const f=favOf(rating);
+  if(!f)return{cls:'pend',txt:`kein Favorit · ${res===held?'gehalten':'Wechsel'} (${res})`};return res===f?{cls:'ok',txt:'Treffer'}:{cls:'miss',txt:'Abweichung'}}
+
+/* --- KPIs --- */
+function chamberKPIs(key){const c=DATA[key],f=c.forecast,res=c.result||{},hasRes=res.D!=null;
+  const models=DATA.models.filter(m=>m[key+'_d_prob']!=null&&m.kind==='Modell');
+  const fav=f.D>=c.majority?'D':f.R>=c.majority?'R':null;
+  const dev=(p,v)=>hasRes?`Ergebnis: <b>${res[p]}</b> · ${res[p]-v>=0?'+':''}${res[p]-v} ggü. Prognose`:'Ergebnis: <span class="pend">— ausstehend</span>';
+  const kp=[
+    {l:'Sitze gesamt',v:c.total,s:key==='senate'?`${c.up} zur Wahl (inkl. Nachwahlen ${c.specials.join(', ')}) · ${c.not_up.D+c.not_up.R} nicht zur Wahl`:'alle 435 zur Wahl',r:''},
+    {l:'Mehrheit',v:c.majority,s:key==='senate'?c.tiebreak:'absolute Mehrheit',r:hasRes&&res.control?`Ergebnis Mehrheit: ${party(res.control)} · ${res.control===fav?'<span class="ok">Treffer</span>':'<span class="miss">Abweichung</span>'}`:'Ergebnis Mehrheit: <span class="pend">— ausstehend</span>'},
+    {l:'Prognose Demokraten',v:`<span class="d">${f.D}</span>`,s:f.basis+(key==='senate'?` (davon ${c.not_up.D} nicht zur Wahl, inkl. 2 Unabh.)`:''),r:dev('D',f.D)},
+    {l:'Prognose Republikaner',v:`<span class="r">${f.R}</span>`,s:f.basis+(key==='senate'?` (davon ${c.not_up.R} nicht zur Wahl)`:''),r:dev('R',f.R)},
+    {l:'Toss-ups (offen)',v:`<span class="t">${f.tossup}</span>`,s:`Cook-Toss-ups · ${f.D>=c.majority?'D über Mehrheit ohne Toss-ups':f.R>=c.majority?'R über Mehrheit ohne Toss-ups':'keine Seite erreicht ohne Toss-ups die Mehrheit'}`,r:hasRes?`Ergebnis: noch offen ${res.undecided??0}`:'Ergebnis: <span class="pend">— ausstehend</span>'},
+    {l:'Mehrheits-Chance D (Modelle)',v:`<span class="d">${Math.min(...models.map(m=>m[key+'_d_prob']))}–${Math.max(...models.map(m=>m[key+'_d_prob']))} %</span>`,s:models.map(m=>`${m.source.split(' (')[0]} ${pc(m[key+'_d_prob'])}`).join(' · '),r:hasRes&&res.control?`Ergebnis: ${party(res.control)}`:'Ergebnis: <span class="pend">— ausstehend</span>'}];
+  document.getElementById('kpis-'+key).innerHTML=kp.map(k=>`<div class="card kpi"><div class="label">${k.l}</div><div class="value">${k.v}</div><div class="src">${k.s}</div>${k.r?`<div class="res">${k.r}</div>`:''}</div>`).join('');
+}
+
+/* --- Sitzbalken --- */
+const markerPlugin={id:'marker',afterDatasetsDraw(ch,a,o){const {ctx,chartArea:ca,scales:{x}}=ch;const xv=x.getPixelForValue(o.value);ctx.save();ctx.strokeStyle=th().marker;ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(xv,ca.top-12);ctx.lineTo(xv,ca.bottom+2);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=th().text;ctx.font='600 12px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText(o.label,xv,ca.top-14);ctx.restore()}};
+const segLabels={id:'seglabels',afterDatasetsDraw(ch){const {ctx}=ch;ctx.save();ctx.font='600 11px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ch.data.datasets.forEach((ds,i)=>{ch.getDatasetMeta(i).data.forEach((bar,j)=>{const v=ds.data[j];if(!v)return;const w=Math.abs(bar.x-bar.base);if(w<18)return;ctx.fillStyle=ds.lbl||'#0f1115';ctx.fillText(v,(bar.x+bar.base)/2,bar.y)})});ctx.restore()}};
+let charts={};
+function seatBar(key){const c=DATA[key],res=c.result||{},hasRes=res.D!=null;
+  let segs=c.categories.map(x=>({k:x.key,v:x.count}));
+  if(key==='senate')segs=[{k:'D nicht zur Wahl',v:c.not_up.D},...segs,{k:'R nicht zur Wahl',v:c.not_up.R}];
+  const labels=['Prognose'+(hasRes?'':' (Cook)')].concat(hasRes?['Ergebnis']:[]);
+  const ds=segs.map(s=>({label:s.k,data:[s.v].concat(hasRes?[0]:[]),backgroundColor:COL[s.k],borderColor:COL[s.k],borderWidth:0,stack:'s',lbl:/nicht|Solid/.test(s.k)?'#ffffff':'#0f1115'}));
+  if(hasRes){ds.push({label:'Ergebnis D',data:[0,res.D],backgroundColor:'#3b82f6',stack:'s',lbl:'#fff'},{label:'Ergebnis offen',data:[0,res.undecided??(c.total-res.D-res.R)],backgroundColor:'#9ca3af',stack:'s'},{label:'Ergebnis R',data:[0,res.R],backgroundColor:'#ef4444',stack:'s',lbl:'#fff'})}
+  document.getElementById('bar-'+key+'-title').textContent=key==='house'?`Sitzverteilung nach Cook-Rating (Prognose) · Linie = Mehrheit ${c.majority}`:`Senat: 100 Sitze inkl. ${c.not_up.D+c.not_up.R} nicht zur Wahl stehender (Prognose) · Linie = ${c.majority} (bei 50:50 entscheidet der VP, R)`;
+  document.getElementById('leg-'+key).innerHTML=segs.map(s=>`<span><i style="background:${COL[s.k]}"></i>${s.k} ${s.v}</span>`).join('');
+  document.querySelector('#bar-'+key).parentElement.style.height=(hasRes?190:130)+'px';
+  if(charts[key])charts[key].destroy();
+  charts[key]=new Chart(document.getElementById('bar-'+key),{type:'bar',data:{labels,datasets:ds},plugins:[markerPlugin,segLabels],
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,animation:false,layout:{padding:{top:30,right:4}},
+      plugins:{legend:{display:false},marker:{value:c.majority,label:String(c.majority)},tooltip:{callbacks:{label:t=>`${t.dataset.label}: ${t.raw}`}}},
+      scales:{x:{stacked:true,min:0,max:c.total,ticks:{color:th().muted,stepSize:key==='house'?(innerWidth<560?100:50):(innerWidth<560?25:10)},grid:{color:th().grid}},y:{stacked:true,ticks:{color:th().text,display:hasRes||innerWidth>560},grid:{display:false}}}}});
+}
+
+/* --- Modelltabelle --- */
+function modelsTable(){const rc={house:DATA.house.result?.control,senate:DATA.senate.result?.control};
+  const v=(p,k)=>{if(p==null)return'';const fav=p>50?'D':'R';if(!rc[k])return'<br><span class="pend">Ergebnis: ausstehend</span>';return `<br>${rc[k]===fav?'<span class="ok">Treffer</span>':'<span class="miss">Abweichung</span>'}`};
+  models.innerHTML='<thead><tr><th>Quelle</th><th>Art</th><th class="num">Haus: Chance D</th><th>Haus: Sitze</th><th class="num">Senat: Chance D</th><th>Senat: Sitze</th><th>Stand</th></tr></thead><tbody>'+
+  DATA.models.map(m=>`<tr><td><a href="${m.url}" target="_blank" rel="noopener">${esc(m.source)}</a>${m.url2?` · <a href="${m.url2}" target="_blank" rel="noopener">2</a>`:''}</td><td>${m.kind==='Prognosemarkt'?'<span class="tag" style="background:rgba(245,158,11,.18);color:#f59e0b">Markt</span>':esc(m.kind)}</td>
+   <td class="num">${pc(m.house_d_prob)}${v(m.house_d_prob,'house')}</td><td>${esc(m.house_seats||'—')}</td><td class="num">${pc(m.senate_d_prob)}${v(m.senate_d_prob,'senate')}</td><td>${esc(m.senate_seats||'—')}</td><td style="min-width:160px">${esc(m.stand)}</td></tr>`).join('')+
+  `<tr><td>Cook Political Report (Primär-Rating)</td><td>Rating</td><td class="num">—</td><td>D ${DATA.house.forecast.D} – R ${DATA.house.forecast.R}, ${DATA.house.forecast.tossup} Toss-ups</td><td class="num">—</td><td>D ${DATA.senate.forecast.D} – R ${DATA.senate.forecast.R}, ${DATA.senate.forecast.tossup} Toss-ups</td><td>2. Nov. 2026</td></tr>`+
+  (DATA.house.result?.D!=null||DATA.senate.result?.D!=null?`<tr><td><b>Ergebnis</b></td><td><span class="tag res">Ergebnis</span></td><td class="num">${party(rc.house)}</td><td>${DATA.house.result?.D!=null?`D ${DATA.house.result.D} – R ${DATA.house.result.R}`:'—'}</td><td class="num">${party(rc.senate)}</td><td>${DATA.senate.result?.D!=null?`D ${DATA.senate.result.D} – R ${DATA.senate.result.R}`:'—'}</td><td>${esc(DATA.house.result?.stand||DATA.senate.result?.stand||'')}</td></tr>`:`<tr><td><b>Ergebnis</b></td><td><span class="tag res">Ergebnis</span></td><td class="num pend">—</td><td class="pend">ausstehend</td><td class="num pend">—</td><td class="pend">ausstehend</td><td></td></tr>`)+'</tbody>';
+}
+
+/* --- Rennentabelle --- */
+const RORD={'Lean D':1,'Toss-up':2,'Lean R':3};
+const COLS=[{k:'label',l:'Rennen'},{k:'rating',l:'Prognose (Cook)'},{k:'result',l:'Ergebnis'},{k:'verdict',l:'Treffer/Abw.'},{k:'rating2',l:'Inside Elections'},{k:'rating3',l:'Sabato'},{k:'incumbent',l:'Amtsinhaber'},{k:'held_by',l:'Sitz hält'},{k:'chamber',l:'Kammer'}];
+let sortK='rating',sortAsc=true;
+function counters(){const R=DATA.races,done=R.filter(r=>r.result);const lean=done.filter(r=>favOf(r.rating));const hits=lean.filter(r=>r.result===favOf(r.rating));
+  const ie=done.filter(r=>favOf(r.rating2)),ieh=ie.filter(r=>r.result===favOf(r.rating2));const tu=done.filter(r=>r.rating==='Toss-up');
+  const quote=lean.length?`<b>${Math.round(hits.length/lean.length*100)} %</b> (${hits.length}/${lean.length} Lean-Rennen)`:'<span class="pend">— erscheint, sobald Ergebnisse eingetragen sind</span>';
+  const byC=['Repräsentantenhaus','Senat'].map(c=>`${c}: `+['Lean D','Toss-up','Lean R'].map(k=>`${k} ${R.filter(r=>r.chamber===c&&r.rating===k).length}`).join(' · ')).join(' &nbsp;|&nbsp; ');
+  counter.innerHTML=`<span>Ergebnisse eingetragen: <b>${done.length} von ${R.length}</b> Rennen</span><span>Prognose-Trefferquote (Cook): ${quote}</span>`+
+   (ie.length?`<span>Inside Elections: <b>${Math.round(ieh.length/ie.length*100)} %</b> (${ieh.length}/${ie.length})</span>`:'')+
+   (tu.length?`<span>Toss-ups entschieden: <b class="d">D ${tu.filter(r=>r.result==='D').length}</b> : <b class="r">R ${tu.filter(r=>r.result==='R').length}</b></span>`:'')+
+   `<span class="pend" style="flex-basis:100%">${byC}</span>`;
+  rescount.innerHTML=`Ergebnisse eingetragen: <b>${done.length} von ${R.length}</b> Rennen.`;
+}
+function renderRaces(){const fc=document.getElementById('f-chamber').value,fr=document.getElementById('f-rating').value,fh=document.getElementById('f-held').value,q=search.value.toLowerCase().trim();
+  let rows=DATA.races.map(r=>({...r,verdict:verdict(r.rating,r.result,r.held_by)}));
+  rows=rows.filter(r=>(!fc||r.chamber===fc)&&(!fr||r.rating===fr)&&(!fh||r.held_by===fh)&&(!q||[r.label,r.state,r.incumbent,r.rating,r.rating2,r.chamber].join(' ').toLowerCase().includes(q)));
+  const val=(r,k)=>k==='rating'?RORD[r.rating]*1000+(r.chamber==='Senat'?0:1)*500:k==='verdict'?r.verdict.txt:(r[k]??'~');
+  rows.sort((a,b)=>{const x=val(a,sortK),y=val(b,sortK);return (x>y?1:x<y?-1:a.label.localeCompare(b.label))*(sortAsc?1:-1)});
+  races.innerHTML='<thead><tr>'+COLS.map(c=>`<th data-k="${c.k}">${c.l}${sortK===c.k?(sortAsc?' ▲':' ▼'):''}</th>`).join('')+'</tr></thead><tbody>'+
+   rows.map(r=>`<tr><td><a href="${r.url}" target="_blank" rel="noopener"><b>${esc(r.label)}</b></a>${r.state?`<br><span class="pend">${esc(r.state)}</span>`:''}${r.special?' <span class="tag">Nachwahl</span>':''}</td>
+    <td>${pill(r.rating)}</td><td>${r.result?party(r.result):'<span class="pend">—</span>'}</td><td class="${r.verdict.cls}">${r.verdict.txt}</td>
+    <td>${pill(r.rating2)}</td><td>${r.chamber==='Senat'?pill(r.rating3):'<span class="pend">n. v.</span>'}</td><td>${esc(r.incumbent)}</td><td>${party(r.held_by)}</td><td>${r.chamber==='Senat'?'Senat':'Haus'}</td></tr>`).join('')+
+   (rows.length?'':'<tr><td colspan="9" class="pend">Keine Rennen für diesen Filter.</td></tr>')+'</tbody>';
+  races.querySelectorAll('th').forEach(h=>h.onclick=()=>{const k=h.dataset.k;sortAsc=sortK===k?!sortAsc:true;sortK=k;renderRaces()});
+}
+['f-chamber','f-rating','f-held'].forEach(id=>document.getElementById(id).onchange=renderRaces);search.oninput=renderRaces;
+
+/* --- Footer --- */
+footer.innerHTML=`<b>Quellen (mit Stand laut Quelle):</b><ul>${DATA.sources.map(s=>`<li><a href="${s.url}" target="_blank" rel="noopener">${esc(s.label)}</a> – Stand: ${esc(s.stand)}</li>`).join('')}</ul>
+<b>Nicht verfügbar / Einschränkungen:</b><ul>${DATA.missing.map(m=>`<li>${esc(m)}</li>`).join('')}</ul>
+<p><b>Wichtig:</b> Ratings (Solid/Likely/Lean/Toss-up) und Modellwahrscheinlichkeiten sind <b>Prognosen, keine Ergebnisse</b>. Senat „D“ schließt die mit den Demokraten stimmenden Unabhängigen ein. Inside-Elections-Gesamtzählung Haus: ${Object.entries(DATA.ie_counts.house).map(([k,v])=>k+' '+v).join(', ')}. Dashboard erstellt ${esc(DATA.meta.built)}.</p>`;
+
+function renderAll(){chamberKPIs('house');chamberKPIs('senate');seatBar('house');seatBar('senate');modelsTable();counters();renderRaces()}
+themebtn.onclick=()=>{document.body.classList.toggle('light');renderAll()};
+renderAll();
+</script>
+</body>
+</html>
